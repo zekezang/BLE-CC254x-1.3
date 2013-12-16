@@ -645,6 +645,7 @@ static void simpleProfileChangeCB(uint8 paramID) {
 #endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
 		break;
 
+
 	case SIMPLEPROFILE_CHAR3:
 		SimpleProfile_GetParameter(SIMPLEPROFILE_CHAR3, &newValue);
 
