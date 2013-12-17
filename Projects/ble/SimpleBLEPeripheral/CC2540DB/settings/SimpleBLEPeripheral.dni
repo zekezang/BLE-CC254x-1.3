@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=-1777344632
+Checksum=-42210024
 [DisAssemblyWindow]
 NumStates=_ 2
 State 1=_ 1
@@ -33,6 +33,7 @@ Leave target running=1
 [Aliases]
 A0=_ "D:\BLE\BLE-CC254x-1.3\Projects\ble\Profiles\Roles\gap.c" ""
 A1=_ "D:\BLE\BLE-CC254x-1.3\Projects\ble\SimpleBLEPeripheral\Source\SimpleBLEPeripheral_Main.c" ""
-A2=_ "\\Zekezang-pc\ble\BLE-CC254x-1.3\Projects\ble\SimpleBLEPeripheral\Source\SimpleBLEPeripheral_Main.c" ""
-Count=3
+A2=_ "\\Zekezang-pc\ble\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_aes.c" ""
+A3=_ "\\Zekezang-pc\ble\BLE-CC254x-1.3\Projects\ble\SimpleBLEPeripheral\Source\SimpleBLEPeripheral_Main.c" ""
+Count=4
 SuppressDialog=1

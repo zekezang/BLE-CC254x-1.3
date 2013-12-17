@@ -44,6 +44,7 @@
 #include "bcomdef.h"
 #include "OSAL.h"
 #include "OSAL_PwrMgr.h"
+#include "osal_snv.h"
 
 #include "OnBoard.h"
 #include "hal_adc.h"
@@ -218,9 +219,7 @@ static void simpleProfileChangeCB(uint8 paramID);
 static void simpleBLEPeripheral_HandleKeys( uint8 shift, uint8 keys );
 #endif
 
-#if (defined HAL_LCD) && (HAL_LCD == TRUE)
-static char *bdAddr2Str ( uint8 *pAddr );
-#endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
+static char *bdAddr2Str(uint8 *pAddr);
 /*********************************************************************
  * PROFILE CALLBACKS
  */
@@ -297,6 +296,22 @@ void SimpleBLEPeripheral_Init(uint8 task_id) {
 	}
 
 	// Set the GAP Characteristics
+	uint8 *aa;
+	aa = osal_msg_allocate(15);
+	osal_memset(aa, 0, 15);
+	osal_memcpy(aa, "zekezang_dev", 12);
+	if(osal_snv_write(0xE0, 15, aa) == SUCCESS){
+		HalLcdWriteString( "write ok", HAL_LCD_LINE_2 );
+	}
+	osal_msg_deallocate(aa);
+
+	uint8 bb[15] = {0x0};
+	if(osal_snv_read(0xE0, 15, bb) == SUCCESS){
+		HalLcdWriteString( "read ok", HAL_LCD_LINE_2 );
+	}
+
+
+
 	GGS_SetParameter(GGS_DEVICE_NAME_ATT, GAP_DEVICE_NAME_LEN, attDeviceName);
 
 	// Set advertising interval
@@ -501,7 +516,7 @@ static void peripheralStateNotificationCB(gaprole_States_t newState) {
 
 #if (defined HAL_LCD) && (HAL_LCD == TRUE)
 		// Display device address
-		//HalLcdWriteString( bdAddr2Str( ownAddress ), HAL_LCD_LINE_2 );
+		HalLcdWriteString( bdAddr2Str( ownAddress ), HAL_LCD_LINE_3 );
 		HalLcdWriteString( "Initialized", HAL_LCD_LINE_3 );
 #endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
 	}
@@ -645,7 +660,6 @@ static void simpleProfileChangeCB(uint8 paramID) {
 #endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
 		break;
 
-
 	case SIMPLEPROFILE_CHAR3:
 		SimpleProfile_GetParameter(SIMPLEPROFILE_CHAR3, &newValue);
 
@@ -660,7 +674,6 @@ static void simpleProfileChangeCB(uint8 paramID) {
 	}
 }
 
-#if (defined HAL_LCD) && (HAL_LCD == TRUE)
 /*********************************************************************
  * @fn      bdAddr2Str
  *
@@ -669,8 +682,7 @@ static void simpleProfileChangeCB(uint8 paramID) {
  *
  * @return  none
  */
-char *bdAddr2Str( uint8 *pAddr )
-{
+char *bdAddr2Str(uint8 *pAddr) {
 	uint8 i;
 	char hex[] = "0123456789ABCDEF";
 	static char str[B_ADDR_STR_LEN];
@@ -682,8 +694,7 @@ char *bdAddr2Str( uint8 *pAddr )
 	// Start from end of addr
 	pAddr += B_ADDR_LEN;
 
-	for ( i = B_ADDR_LEN; i > 0; i-- )
-	{
+	for (i = B_ADDR_LEN; i > 0; i--) {
 		*pStr++ = hex[*--pAddr >> 4];
 		*pStr++ = hex[*pAddr & 0x0F];
 	}
@@ -692,6 +703,5 @@ char *bdAddr2Str( uint8 *pAddr )
 
 	return str;
 }
-#endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
 /*********************************************************************
  *********************************************************************/
