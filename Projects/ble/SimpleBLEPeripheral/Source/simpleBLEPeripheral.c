@@ -618,8 +618,8 @@ static void simpleProfileChangeCB(uint8 paramID) {
 
 		send_val = osal_msg_allocate(20);
 		osal_memset(send_val, 0, 20);
-		osal_memcpy(send_val, "recv value: ", 12);
-		osal_memcpy(send_val + 12, newValueBuf, 4);
+		osal_memcpy(send_val, "rv:", 3);
+		osal_memcpy(send_val + 3, newValueBuf, 4);
 		HalLcdWriteString((char*) send_val, HAL_LCD_LINE_3);
 		osal_msg_deallocate(send_val);
 

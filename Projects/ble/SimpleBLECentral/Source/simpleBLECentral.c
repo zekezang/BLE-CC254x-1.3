@@ -396,7 +396,7 @@ uint8 sbpGattWriteString(uint8 *pBuffer, uint16 length) {
 	return status;
 }
 
-static char val[4] = { 0x61, 0x62, 0x63, 0x64 };
+static unsigned char val[4] = { 0x61, 0x62, 0x63, 0x64 };
 static uint8 *send_val;
 static void simpleBLECentral_sendABC() {
 	uint8 status;
