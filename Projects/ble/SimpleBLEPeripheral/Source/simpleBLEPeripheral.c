@@ -75,6 +75,8 @@
 
 #include "simpleBLEPeripheral.h"
 
+#include "IRLED.h"
+
 #if defined FEATURE_OAD
 #include "oad.h"
 #include "oad_target.h"
@@ -214,10 +216,7 @@ static void simpleBLEPeripheral_ProcessOSALMsg(osal_event_hdr_t *pMsg);
 static void peripheralStateNotificationCB(gaprole_States_t newState);
 static void performPeriodicTask(void);
 static void simpleProfileChangeCB(uint8 paramID);
-
-#if defined( CC2540_MINIDK )
-static void simpleBLEPeripheral_HandleKeys( uint8 shift, uint8 keys );
-#endif
+static void simpleBLEPeripheral_HandleKeys(uint8 shift, uint8 keys);
 
 static char *bdAddr2Str(uint8 *pAddr);
 /*********************************************************************
@@ -299,18 +298,16 @@ void SimpleBLEPeripheral_Init(uint8 task_id) {
 	uint8 *aa;
 	aa = osal_msg_allocate(15);
 	osal_memset(aa, 0, 15);
-	osal_memcpy(aa, "zekezang_dev", 12);
-	if(osal_snv_write(0xE0, 15, aa) == SUCCESS){
-		HalLcdWriteString( "write ok", HAL_LCD_LINE_2 );
+	osal_memcpy(aa, "as", 2);
+	if (osal_snv_write(0xE0, 15, aa) == SUCCESS) {
+		HalLcdWriteString("write ok", HAL_LCD_LINE_2);
 	}
 	osal_msg_deallocate(aa);
 
-	uint8 bb[15] = {0x0};
-	if(osal_snv_read(0xE0, 15, bb) == SUCCESS){
-		HalLcdWriteString( "read ok", HAL_LCD_LINE_2 );
+	uint8 bb[15] = { 0x0 };
+	if (osal_snv_read(0xE0, 15, bb) == SUCCESS) {
+		HalLcdWriteString("read ok", HAL_LCD_LINE_2);
 	}
-
-
 
 	GGS_SetParameter(GGS_DEVICE_NAME_ATT, GAP_DEVICE_NAME_LEN, attDeviceName);
 
@@ -427,6 +424,8 @@ uint16 SimpleBLEPeripheral_ProcessEvent(uint8 task_id, uint16 events) {
 		// Set timer for first periodic event
 		osal_start_timerEx(simpleBLEPeripheral_TaskID, SBP_PERIODIC_EVT, SBP_PERIODIC_EVT_PERIOD);
 
+		osal_start_timerEx(simpleBLEPeripheral_TaskID, SBP_ZEKEZANG_EVT, 2000);
+
 		return (events ^ SBP_START_DEVICE_EVT);
 	}
 
@@ -440,6 +439,18 @@ uint16 SimpleBLEPeripheral_ProcessEvent(uint8 task_id, uint16 events) {
 		performPeriodicTask();
 
 		return (events ^ SBP_PERIODIC_EVT);
+	}
+
+	if (events & SBP_ZEKEZANG_EVT) {
+		HalLcdWriteString("11111111111111", HAL_LCD_LINE_6);
+
+		IRLED_init();
+
+		SendIRdata(1);
+
+		IRLED_stop();
+
+		return (events ^ SBP_ZEKEZANG_EVT);
 	}
 
 #if defined ( PLUS_BROADCASTER )
@@ -467,14 +478,18 @@ uint16 SimpleBLEPeripheral_ProcessEvent(uint8 task_id, uint16 events) {
  */
 static void simpleBLEPeripheral_ProcessOSALMsg(osal_event_hdr_t *pMsg) {
 	switch (pMsg->event) {
-#if defined( CC2540_MINIDK )
 	case KEY_CHANGE:
-	simpleBLEPeripheral_HandleKeys( ((keyChange_t *)pMsg)->state, ((keyChange_t *)pMsg)->keys );
-	break;
-#endif // #if defined( CC2540_MINIDK )
+		simpleBLEPeripheral_HandleKeys(((keyChange_t *) pMsg)->state, ((keyChange_t *) pMsg)->keys);
+		break;
 	default:
 		// do nothing
 		break;
+	}
+}
+
+static void simpleBLEPeripheral_HandleKeys(uint8 shift, uint8 keys) {
+	(void) shift; // Intentionally unreferenced parameter
+	if (keys & HAL_KEY_UP) {
 	}
 }
 
