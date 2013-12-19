@@ -8470,10 +8470,13 @@
   <group>
     <name>APP</name>
     <file>
-      <name>$PROJ_DIR$\..\Source\IRLED.C</name>
+      <name>$PROJ_DIR$\..\Source\OSAL_SimpleBLEPeripheral.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\Source\OSAL_SimpleBLEPeripheral.c</name>
+      <name>$PROJ_DIR$\..\Source\SimpleBLEInfraredSend.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\SimpleBLEInfraredSend.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\Source\simpleBLEPeripheral.c</name>
