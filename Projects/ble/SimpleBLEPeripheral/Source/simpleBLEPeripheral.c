@@ -74,8 +74,7 @@
 #include "gapbondmgr.h"
 
 #include "simpleBLEPeripheral.h"
-
-#include "IRLED.h"
+#include "SimpleBLEInfraredSend.h"
 
 #if defined FEATURE_OAD
 #include "oad.h"
@@ -295,7 +294,7 @@ void SimpleBLEPeripheral_Init(uint8 task_id) {
 	}
 
 	// Set the GAP Characteristics
-	uint8 *aa;
+	uint8 * aa;
 	aa = osal_msg_allocate(15);
 	osal_memset(aa, 0, 15);
 	osal_memcpy(aa, "as", 2);
@@ -379,6 +378,8 @@ void SimpleBLEPeripheral_Init(uint8 task_id) {
 	// Setup a delayed profile startup
 	osal_set_event(simpleBLEPeripheral_TaskID, SBP_START_DEVICE_EVT);
 
+	//zekezang
+	sendIRData(0xAB, 0x11, 0x22);
 }
 
 /*********************************************************************
@@ -424,8 +425,6 @@ uint16 SimpleBLEPeripheral_ProcessEvent(uint8 task_id, uint16 events) {
 		// Set timer for first periodic event
 		osal_start_timerEx(simpleBLEPeripheral_TaskID, SBP_PERIODIC_EVT, SBP_PERIODIC_EVT_PERIOD);
 
-		osal_start_timerEx(simpleBLEPeripheral_TaskID, SBP_ZEKEZANG_EVT, 2000);
-
 		return (events ^ SBP_START_DEVICE_EVT);
 	}
 
@@ -441,17 +440,12 @@ uint16 SimpleBLEPeripheral_ProcessEvent(uint8 task_id, uint16 events) {
 		return (events ^ SBP_PERIODIC_EVT);
 	}
 
-	if (events & SBP_ZEKEZANG_EVT) {
-		HalLcdWriteString("11111111111111", HAL_LCD_LINE_6);
-
-		IRLED_init();
-
-		SendIRdata(1);
-
-		IRLED_stop();
-
-		return (events ^ SBP_ZEKEZANG_EVT);
-	}
+//	if (events & SBP_ZEKEZANG_EVT) {
+//		//HalLcdWriteString("11111111111111", HAL_LCD_LINE_6);
+//		aa++;
+//		HalLcdWriteStringValue("aa:", aa, 10, HAL_LCD_LINE_6);
+//		return (events ^ SBP_ZEKEZANG_EVT);
+//	}
 
 #if defined ( PLUS_BROADCASTER )
 	if ( events & SBP_ADV_IN_CONNECTION_EVT )
