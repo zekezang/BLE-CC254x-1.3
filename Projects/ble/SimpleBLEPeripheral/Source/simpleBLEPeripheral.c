@@ -216,7 +216,8 @@ static void peripheralStateNotificationCB(gaprole_States_t newState);
 static void performPeriodicTask(void);
 static void simpleProfileChangeCB(uint8 paramID);
 static void simpleBLEPeripheral_HandleKeys(uint8 shift, uint8 keys);
-
+static void simpleBLEPeripheralPasscodeCB(uint8 *deviceAddr, uint16 connectionHandle, uint8 uiInputs, uint8 uiOutputs);
+static void simpleBLEPeripheralPairStateCB(uint16 connHandle, uint8 state, uint8 status);
 static char *bdAddr2Str(uint8 *pAddr);
 /*********************************************************************
  * PROFILE CALLBACKS
@@ -229,27 +230,69 @@ static gapRolesCBs_t simpleBLEPeripheral_PeripheralCBs = { peripheralStateNotifi
 
 // GAP Bond Manager Callbacks
 static gapBondCBs_t simpleBLEPeripheral_BondMgrCBs = { NULL, // Passcode callback (not used by application)
-		NULL // Pairing / Bonding state Callback (not used by application)
+		simpleBLEPeripheralPairStateCB // Pairing / Bonding state Callback (not used by application)
 		};
 
 // Simple GATT Profile Callbacks
 static simpleProfileCBs_t simpleBLEPeripheral_SimpleProfileCBs = { simpleProfileChangeCB // Charactersitic value change callback
 		};
 
+/*********************************************************************
+ * @fn      pairStateCB
+ * @brief   Pairing state callback.
+ * @return  none
+ */
+static void simpleBLEPeripheralPairStateCB(uint16 connHandle, uint8 state, uint8 status) {
+	if (state == GAPBOND_PAIRING_STATE_STARTED) {
+		HalLcdWriteString("Pairing started", HAL_LCD_LINE_7);
+	} else if (state == GAPBOND_PAIRING_STATE_COMPLETE) {
+		if (status == SUCCESS) {
+			HalLcdWriteString("Pairing success", HAL_LCD_LINE_7);
+		} else {
+			HalLcdWriteStringValue("Pairing fail", status, 10, HAL_LCD_LINE_7);
+			uint8 a = GAPRole_TerminateConnection();
+			HalLcdWriteStringValue("Pairing fail--a", a, 10, HAL_LCD_LINE_7);
+		}
+	} else if (state == GAPBOND_PAIRING_STATE_BONDED) {
+		if (status == SUCCESS) {
+			HalLcdWriteString("Bonding success", HAL_LCD_LINE_1);
+		}
+	}
 
+	osal_start_timerEx(simpleBLEPeripheral_TaskID, SBP_ZEKEZANG_EVT, 5000);
+}
 
-static void readWriteFlash(){
-	uint8 * aa;
-	aa = osal_msg_allocate(15);
-	osal_memset(aa, 0, 15);
-	osal_memcpy(aa, "as", 2);
-	if (osal_snv_write(0xE0, 15, aa) == SUCCESS) {
+/*********************************************************************
+ * @fn      simpleBLECentralPasscodeCB
+ * @brief   Passcode callback.
+ * @return  none
+ */
+static void simpleBLEPeripheralPasscodeCB(uint8 *deviceAddr, uint16 connectionHandle, uint8 uiInputs, uint8 uiOutputs) {
+	HalLcdWriteStringValue("uiInputs:", uiInputs, 10, HAL_LCD_LINE_5);
+	HalLcdWriteStringValue("uiOutputs", uiOutputs, 10, HAL_LCD_LINE_6);
+}
+
+static uint32 passs = 0;
+/*********************************************************************
+ * @fn      readWriteFlash
+ * @brief   readWriteFlash
+ * @return  none
+ */
+static void readWriteFlash() {
+//	uint8 * aa;
+//	aa = osal_msg_allocate(15);
+//	osal_memset(aa, 0, 15);
+//	osal_memcpy(aa, "as", 2);
+	uint16 p = 235;
+	if (osal_snv_write(0xE0, sizeof(uint16), &p) == SUCCESS) {
 		HalLcdWriteString("write ok", HAL_LCD_LINE_2);
 	}
-	osal_msg_deallocate(aa);
-	uint8 bb[15] = { 0x0 };
-	if (osal_snv_read(0xE0, 15, bb) == SUCCESS) {
+//	osal_msg_deallocate(aa);
+//	uint8 bb[15] = { 0x0 };
+	uint16 bb = 0;
+	if (osal_snv_read(0xE0, 15, &bb) == SUCCESS) {
 		HalLcdWriteString("read ok", HAL_LCD_LINE_2);
+		passs = bb;
 	}
 }
 
@@ -325,10 +368,12 @@ void SimpleBLEPeripheral_Init(uint8 task_id) {
 		GAP_SetParamValue(TGAP_GEN_DISC_ADV_INT_MAX, advInt);
 	}
 
+	HalLcdWriteStringValue("bb:", passs, 10, HAL_LCD_LINE_6);
 	// Setup the GAP Bond Manager
 	{
-		uint32 passkey = 0; // passkey "000000"
-		uint8 pairMode = GAPBOND_PAIRING_MODE_WAIT_FOR_REQ;
+		uint32 passkey = passs; // passkey "000000"
+		//uint8 pairMode = GAPBOND_PAIRING_MODE_WAIT_FOR_REQ;
+		uint8 pairMode = GAPBOND_PAIRING_MODE_INITIATE;
 		uint8 mitm = TRUE;
 		uint8 ioCap = GAPBOND_IO_CAP_DISPLAY_ONLY;
 		uint8 bonding = TRUE;
@@ -366,8 +411,7 @@ void SimpleBLEPeripheral_Init(uint8 task_id) {
 	HalLcdWriteString( "BLE slave zekezang", HAL_LCD_LINE_1 );
 #endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
 	// Register callback with SimpleGATTprofile
-	VOID
-	SimpleProfile_RegisterAppCBs(&simpleBLEPeripheral_SimpleProfileCBs);
+	VOID SimpleProfile_RegisterAppCBs(&simpleBLEPeripheral_SimpleProfileCBs);
 
 	// Enable clock divide on halt
 	// This reduces active current while radio is active and CC254x MCU
@@ -408,7 +452,7 @@ uint16 SimpleBLEPeripheral_ProcessEvent(uint8 task_id, uint16 events) {
 			simpleBLEPeripheral_ProcessOSALMsg((osal_event_hdr_t *) pMsg);
 
 			// Release the OSAL message
-			VOID osal_msg_deallocate( pMsg);
+			VOID osal_msg_deallocate(pMsg);
 		}
 
 		// return unprocessed events
@@ -417,11 +461,9 @@ uint16 SimpleBLEPeripheral_ProcessEvent(uint8 task_id, uint16 events) {
 
 	if (events & SBP_START_DEVICE_EVT) {
 		// Start the Device
-		VOID
 		GAPRole_StartDevice(&simpleBLEPeripheral_PeripheralCBs);
 
 		// Start Bond Manager
-		VOID
 		GAPBondMgr_Register(&simpleBLEPeripheral_BondMgrCBs);
 
 		// Set timer for first periodic event
@@ -442,12 +484,11 @@ uint16 SimpleBLEPeripheral_ProcessEvent(uint8 task_id, uint16 events) {
 		return (events ^ SBP_PERIODIC_EVT);
 	}
 
-//	if (events & SBP_ZEKEZANG_EVT) {
-//		//HalLcdWriteString("11111111111111", HAL_LCD_LINE_6);
-//		aa++;
-//		HalLcdWriteStringValue("aa:", aa, 10, HAL_LCD_LINE_6);
-//		return (events ^ SBP_ZEKEZANG_EVT);
-//	}
+	if (events & SBP_ZEKEZANG_EVT) {
+		uint8 initial_advertising_enable = FALSE;
+		GAPRole_SetParameter(GAPROLE_ADVERT_ENABLED, sizeof(uint8), &initial_advertising_enable);
+		return (events ^ SBP_ZEKEZANG_EVT);
+	}
 
 #if defined ( PLUS_BROADCASTER )
 	if ( events & SBP_ADV_IN_CONNECTION_EVT )
@@ -525,53 +566,39 @@ static void peripheralStateNotificationCB(gaprole_States_t newState) {
 
 		DevInfo_SetParameter(DEVINFO_SYSTEM_ID, DEVINFO_SYSTEM_ID_LEN, systemId);
 
-#if (defined HAL_LCD) && (HAL_LCD == TRUE)
 		// Display device address
-		HalLcdWriteString( bdAddr2Str( ownAddress ), HAL_LCD_LINE_3 );
-		HalLcdWriteString( "Initialized", HAL_LCD_LINE_3 );
-#endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
+		HalLcdWriteString(bdAddr2Str(ownAddress), HAL_LCD_LINE_3);
+		HalLcdWriteString("Initialized", HAL_LCD_LINE_3);
 	}
 		break;
 
 	case GAPROLE_ADVERTISING: {
-#if (defined HAL_LCD) && (HAL_LCD == TRUE)
-		HalLcdWriteString( "Advertising", HAL_LCD_LINE_3 );
-#endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
+		HalLcdWriteString("Advertising", HAL_LCD_LINE_3);
 	}
 		break;
 
 	case GAPROLE_CONNECTED: {
-#if (defined HAL_LCD) && (HAL_LCD == TRUE)
-		HalLcdWriteString( "Connected", HAL_LCD_LINE_3 );
-#endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
+		HalLcdWriteString("Connected", HAL_LCD_LINE_3);
 	}
 		break;
 
 	case GAPROLE_WAITING: {
-#if (defined HAL_LCD) && (HAL_LCD == TRUE)
-		HalLcdWriteString( "Disconnected", HAL_LCD_LINE_3 );
-#endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
+		HalLcdWriteString("Disconnected", HAL_LCD_LINE_3);
 	}
 		break;
 
 	case GAPROLE_WAITING_AFTER_TIMEOUT: {
-#if (defined HAL_LCD) && (HAL_LCD == TRUE)
-		HalLcdWriteString( "Timed Out", HAL_LCD_LINE_3 );
-#endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
+		HalLcdWriteString("Timed Out", HAL_LCD_LINE_3);
 	}
 		break;
 
 	case GAPROLE_ERROR: {
-#if (defined HAL_LCD) && (HAL_LCD == TRUE)
-		HalLcdWriteString( "Error", HAL_LCD_LINE_3 );
-#endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
+		HalLcdWriteString("Error", HAL_LCD_LINE_3);
 	}
 		break;
 
 	default: {
-#if (defined HAL_LCD) && (HAL_LCD == TRUE)
-		HalLcdWriteString( "", HAL_LCD_LINE_3 );
-#endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
+		HalLcdWriteString("", HAL_LCD_LINE_3);
 	}
 		break;
 

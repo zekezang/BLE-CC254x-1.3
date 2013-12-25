@@ -121,7 +121,7 @@
 #define DEFAULT_BONDING_MODE                  TRUE
 
 // Default GAP bonding I/O capabilities
-#define DEFAULT_IO_CAPABILITIES               GAPBOND_IO_CAP_DISPLAY_ONLY
+#define DEFAULT_IO_CAPABILITIES               GAPBOND_IO_CAP_KEYBOARD_DISPLAY
 
 // Default service discovery timer delay in ms
 #define DEFAULT_SVC_DISCOVERY_DELAY           1000
@@ -268,9 +268,9 @@ void SimpleBLECentral_Init(uint8 task_id) {
 
 	// Setup the GAP Bond Manager
 	{
-		uint32 passkey = DEFAULT_PASSCODE;
-		uint8 pairMode = DEFAULT_PAIRING_MODE;
-		uint8 mitm = DEFAULT_MITM_MODE;
+		uint32 passkey = 123;
+		uint8 pairMode = GAPBOND_PAIRING_MODE_WAIT_FOR_REQ;
+		uint8 mitm = TRUE;
 		uint8 ioCap = DEFAULT_IO_CAPABILITIES;
 		uint8 bonding = DEFAULT_BONDING_MODE;
 		GAPBondMgr_SetParameter(GAPBOND_DEFAULT_PASSCODE, sizeof(uint32), &passkey);
@@ -735,7 +735,6 @@ static void simpleBLECentralPairStateCB(uint16 connHandle, uint8 state, uint8 st
  * @return  none
  */
 static void simpleBLECentralPasscodeCB(uint8 *deviceAddr, uint16 connectionHandle, uint8 uiInputs, uint8 uiOutputs) {
-#if (HAL_LCD == TRUE)
 
 	uint32 passcode;
 	uint8 str[7];
@@ -750,9 +749,10 @@ static void simpleBLECentralPasscodeCB(uint8 *deviceAddr, uint16 connectionHandl
 		LCD_WRITE_STRING( (char *) _ltoa(passcode, str, 10), HAL_LCD_LINE_2);
 	}
 
+	LCD_WRITE_STRING( "Passcode CB", HAL_LCD_LINE_4);
+
 	// Send passcode response
-	GAPBondMgr_PasscodeRsp(connectionHandle, SUCCESS, passcode);
-#endif
+	GAPBondMgr_PasscodeRsp(connectionHandle, SUCCESS, 333);
 }
 
 /*********************************************************************
