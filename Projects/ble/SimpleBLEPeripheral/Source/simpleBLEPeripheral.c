@@ -74,7 +74,7 @@
 #include "gapbondmgr.h"
 
 #include "simpleBLEPeripheral.h"
-#include "SimpleBLEInfraredSend.h"
+//#include "SimpleBLEInfraredSend.h"
 
 #if defined FEATURE_OAD
 #include "oad.h"
@@ -236,6 +236,23 @@ static gapBondCBs_t simpleBLEPeripheral_BondMgrCBs = { NULL, // Passcode callbac
 static simpleProfileCBs_t simpleBLEPeripheral_SimpleProfileCBs = { simpleProfileChangeCB // Charactersitic value change callback
 		};
 
+
+
+static void readWriteFlash(){
+	uint8 * aa;
+	aa = osal_msg_allocate(15);
+	osal_memset(aa, 0, 15);
+	osal_memcpy(aa, "as", 2);
+	if (osal_snv_write(0xE0, 15, aa) == SUCCESS) {
+		HalLcdWriteString("write ok", HAL_LCD_LINE_2);
+	}
+	osal_msg_deallocate(aa);
+	uint8 bb[15] = { 0x0 };
+	if (osal_snv_read(0xE0, 15, bb) == SUCCESS) {
+		HalLcdWriteString("read ok", HAL_LCD_LINE_2);
+	}
+}
+
 /*********************************************************************
  * PUBLIC FUNCTIONS
  */
@@ -293,21 +310,9 @@ void SimpleBLEPeripheral_Init(uint8 task_id) {
 		GAPRole_SetParameter(GAPROLE_TIMEOUT_MULTIPLIER, sizeof(uint16), &desired_conn_timeout);
 	}
 
+	readWriteFlash();
+
 	// Set the GAP Characteristics
-	uint8 * aa;
-	aa = osal_msg_allocate(15);
-	osal_memset(aa, 0, 15);
-	osal_memcpy(aa, "as", 2);
-	if (osal_snv_write(0xE0, 15, aa) == SUCCESS) {
-		HalLcdWriteString("write ok", HAL_LCD_LINE_2);
-	}
-	osal_msg_deallocate(aa);
-
-	uint8 bb[15] = { 0x0 };
-	if (osal_snv_read(0xE0, 15, bb) == SUCCESS) {
-		HalLcdWriteString("read ok", HAL_LCD_LINE_2);
-	}
-
 	GGS_SetParameter(GGS_DEVICE_NAME_ATT, GAP_DEVICE_NAME_LEN, attDeviceName);
 
 	// Set advertising interval
@@ -370,16 +375,13 @@ void SimpleBLEPeripheral_Init(uint8 task_id) {
 	HCI_EXT_ClkDivOnHaltCmd(HCI_EXT_ENABLE_CLK_DIVIDE_ON_HALT);
 
 #if defined ( DC_DC_P0_7 )
-
 	// Enable stack to toggle bypass control on TPS62730 (DC/DC converter)
 	HCI_EXT_MapPmIoPortCmd( HCI_EXT_PM_IO_PORT_P0, HCI_EXT_PM_IO_PORT_PIN7 );
-
 #endif // defined ( DC_DC_P0_7 )
 	// Setup a delayed profile startup
 	osal_set_event(simpleBLEPeripheral_TaskID, SBP_START_DEVICE_EVT);
-
 	//zekezang
-	sendIRData(0xAB, 0x11, 0x22);
+	//sendIRData(0xAB, 0x11, 0x22);
 }
 
 /*********************************************************************

@@ -413,14 +413,14 @@ static void simpleBLECentral_sendABC() {
 		val[3] += 1;
 	}
 
-	status = sbpGattWriteString(val, 4);
-
 	send_val = osal_msg_allocate(20);
 	osal_memset(send_val, 0, 20);
 	osal_memcpy(send_val, "send value: ", 12);
 	osal_memcpy(send_val + 12, val, 4);
 	HalLcdWriteString((char*) send_val, HAL_LCD_LINE_3);
 	osal_msg_deallocate(send_val);
+
+	status = sbpGattWriteString(val, 4);
 
 	if (status == SUCCESS) {
 		simpleBLEProcedureInProgress = TRUE;

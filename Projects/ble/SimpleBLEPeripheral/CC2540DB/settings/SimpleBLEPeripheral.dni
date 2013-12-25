@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=828247550
+Checksum=1547684552
 [DisAssemblyWindow]
 NumStates=_ 2
 State 1=_ 1
@@ -18,6 +18,18 @@ UseTrigger=1
 TriggerName=main
 LimitSize=0
 ByteLimit=50
+[Stack]
+FillEnabled=0
+OverflowWarningsEnabled=1
+WarningThreshold=90
+SpWarningsEnabled=1
+WarnLogOnly=1
+UseTrigger=1
+TriggerName=main
+LimitSize=0
+ByteLimit=50
+[CallStack]
+ShowArgs=0
 [Breakpoints]
 Count=0
 [ChipconEmu]
