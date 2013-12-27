@@ -266,9 +266,9 @@ void SimpleBLECentral_Init(uint8 task_id) {
 	GAP_SetParamValue(TGAP_LIM_DISC_SCAN, DEFAULT_SCAN_DURATION);
 	GGS_SetParameter(GGS_DEVICE_NAME_ATT, GAP_DEVICE_NAME_LEN, (uint8 *) simpleBLEDeviceName);
 
-	// Setup the GAP Bond Manager
+	// Setup the GAP Bond Manager从机发出验证请求，主机不要设这一块。
 	{
-		uint32 passkey = 123;
+		uint32 passkey = 000;
 		uint8 pairMode = GAPBOND_PAIRING_MODE_WAIT_FOR_REQ;
 		uint8 mitm = TRUE;
 		uint8 ioCap = DEFAULT_IO_CAPABILITIES;
@@ -751,8 +751,8 @@ static void simpleBLECentralPasscodeCB(uint8 *deviceAddr, uint16 connectionHandl
 
 	LCD_WRITE_STRING( "Passcode CB", HAL_LCD_LINE_4);
 
-	// Send passcode response
-	GAPBondMgr_PasscodeRsp(connectionHandle, SUCCESS, 333);
+	// Send passcode response//应答从机的密码
+	GAPBondMgr_PasscodeRsp(connectionHandle, SUCCESS, 12345);
 }
 
 /*********************************************************************

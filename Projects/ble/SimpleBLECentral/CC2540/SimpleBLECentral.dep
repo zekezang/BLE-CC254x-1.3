@@ -159,6 +159,10 @@
       <file>$PROJ_DIR$\CC2540EM\Obj\hal_sleep.r51</file>
       <file>$PROJ_DIR$\..\..\..\..\Components\ble\include\gatt.h</file>
       <file>$PROJ_DIR$\..\..\..\..\Components\ble\include\att.h</file>
+      <file>$PROJ_DIR$\..\..\SimpleBLEPeripheral\Source\SimpleBLESerialUart.h</file>
+      <file>$PROJ_DIR$\..\..\SimpleBLEPeripheral\Source\SimpleBLESerialUart.c</file>
+      <file>$PROJ_DIR$\CC2540EM\Obj\SimpleBLESerialUart.r51</file>
+      <file>$PROJ_DIR$\CC2540EM\Obj\SimpleBLESerialUart.pbi</file>
     </outputs>
     <file>
       <name>[ROOT_NODE]</name>
@@ -848,6 +852,29 @@
         <tool>
           <name>BICOMP</name>
           <file> 110 63 29 8 130 32 143 14 67 141 60 138 100 13 7 17 11</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\SimpleBLEPeripheral\Source\SimpleBLESerialUart.c</name>
+      <outputs>
+        <tool>
+          <name>ICC8051</name>
+          <file> 155</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 156</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC8051</name>
+          <file> 127 128 110 63 29 8 67 141 60 138 100 105 130 32 143 14 5 7 17 13 11 12 16 153</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 110 63 29 8 67 141 60 138 100 105 130 32 143 14 5 7 17 13 11 12 16 153</file>
         </tool>
       </inputs>
     </file>

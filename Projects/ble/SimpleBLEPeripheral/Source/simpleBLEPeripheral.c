@@ -51,6 +51,7 @@
 #include "hal_led.h"
 #include "hal_key.h"
 #include "hal_lcd.h"
+#include "SimpleBLESerialUart.h"
 
 #include "gatt.h"
 
@@ -157,25 +158,8 @@ static gaprole_States_t gapProfileState = GAPROLE_INIT;
 static uint8 scanRspData[] = {
 // complete name
 		0x14,// length of this data
-		GAP_ADTYPE_LOCAL_NAME_COMPLETE, 0x53, // 'S'
-		0x69, // 'i'
-		0x6d, // 'm'
-		0x70, // 'p'
-		0x6c, // 'l'
-		0x65, // 'e'
-		0x42, // 'B'
-		0x4c, // 'L'
-		0x45, // 'E'
-		0x50, // 'P'
-		0x65, // 'e'
-		0x72, // 'r'
-		0x69, // 'i'
-		0x70, // 'p'
-		0x68, // 'h'
-		0x65, // 'e'
-		0x72, // 'r'
-		0x61, // 'a'
-		0x6c, // 'l'
+		GAP_ADTYPE_LOCAL_NAME_COMPLETE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00,
 
 		// connection interval range
 		0x05,// length of this data
@@ -206,7 +190,7 @@ static uint8 advertData[] = {
 };
 
 // GAP GATT Attributes
-static uint8 attDeviceName[GAP_DEVICE_NAME_LEN] = "GhostyuBLEPeripheral";
+static uint8 attDeviceName[GAP_DEVICE_NAME_LEN] = "zekezang";
 
 /*********************************************************************
  * LOCAL FUNCTIONS
@@ -216,9 +200,10 @@ static void peripheralStateNotificationCB(gaprole_States_t newState);
 static void performPeriodicTask(void);
 static void simpleProfileChangeCB(uint8 paramID);
 static void simpleBLEPeripheral_HandleKeys(uint8 shift, uint8 keys);
-static void simpleBLEPeripheralPasscodeCB(uint8 *deviceAddr, uint16 connectionHandle, uint8 uiInputs, uint8 uiOutputs);
+//static void simpleBLEPeripheralPasscodeCB(uint8 *deviceAddr, uint16 connectionHandle, uint8 uiInputs, uint8 uiOutputs);
 static void simpleBLEPeripheralPairStateCB(uint16 connHandle, uint8 state, uint8 status);
 static char *bdAddr2Str(uint8 *pAddr);
+static void updateDeviceName(char *name, uint8 len);
 /*********************************************************************
  * PROFILE CALLBACKS
  */
@@ -259,18 +244,19 @@ static void simpleBLEPeripheralPairStateCB(uint16 connHandle, uint8 state, uint8
 		}
 	}
 
-	osal_start_timerEx(simpleBLEPeripheral_TaskID, SBP_ZEKEZANG_EVT, 5000);
+	//osal_start_timerEx(simpleBLEPeripheral_TaskID, SBP_ZEKEZANG_EVT, 5000);
 }
 
 /*********************************************************************
  * @fn      simpleBLECentralPasscodeCB
  * @brief   Passcode callback.
  * @return  none
+
+ static void simpleBLEPeripheralPasscodeCB(uint8 *deviceAddr, uint16 connectionHandle, uint8 uiInputs, uint8 uiOutputs) {
+ HalLcdWriteStringValue("uiInputs:", uiInputs, 10, HAL_LCD_LINE_5);
+ HalLcdWriteStringValue("uiOutputs", uiOutputs, 10, HAL_LCD_LINE_6);
+ }
  */
-static void simpleBLEPeripheralPasscodeCB(uint8 *deviceAddr, uint16 connectionHandle, uint8 uiInputs, uint8 uiOutputs) {
-	HalLcdWriteStringValue("uiInputs:", uiInputs, 10, HAL_LCD_LINE_5);
-	HalLcdWriteStringValue("uiOutputs", uiOutputs, 10, HAL_LCD_LINE_6);
-}
 
 static uint32 passs = 0;
 /*********************************************************************
@@ -283,7 +269,7 @@ static void readWriteFlash() {
 //	aa = osal_msg_allocate(15);
 //	osal_memset(aa, 0, 15);
 //	osal_memcpy(aa, "as", 2);
-	uint16 p = 235;
+	uint16 p = 1234;
 	if (osal_snv_write(0xE0, sizeof(uint16), &p) == SUCCESS) {
 		HalLcdWriteString("write ok", HAL_LCD_LINE_2);
 	}
@@ -316,6 +302,7 @@ static void readWriteFlash() {
  */
 void SimpleBLEPeripheral_Init(uint8 task_id) {
 	simpleBLEPeripheral_TaskID = task_id;
+	SerialApp_Init(task_id);
 
 	// Setup the GAP Peripheral Role Profile
 	{
@@ -656,6 +643,7 @@ static void performPeriodicTask(void) {
  */
 static uint32 k = 0;
 static uint8 *send_val;
+uint8 *uart_s;
 static void simpleProfileChangeCB(uint8 paramID) {
 	uint8 newValue;
 	uint8 newValueBuf[20] = { 0 };
@@ -667,6 +655,13 @@ static void simpleProfileChangeCB(uint8 paramID) {
 		//HalLcdWriteStringValue( "Char 1:", (uint16)(newValue), 10,  HAL_LCD_LINE_3 );
 		k++;
 
+		uart_s = osal_msg_allocate(5);
+		osal_memset(uart_s, 0, 5);
+		*(uart_s) = 0x05;
+		osal_memcpy(uart_s+1,newValueBuf, 4);
+		sbpSerialAppWrite(uart_s, 5);
+		osal_msg_deallocate(uart_s);
+
 		HalLcdWriteStringValue( "recv counter:", k, 10, HAL_LCD_LINE_2 );
 
 		send_val = osal_msg_allocate(20);
@@ -676,19 +671,19 @@ static void simpleProfileChangeCB(uint8 paramID) {
 		HalLcdWriteString((char*) send_val, HAL_LCD_LINE_3);
 		osal_msg_deallocate(send_val);
 
-		if(k%4 == 0) {
-			HalLedSet(HAL_LED_ALL, HAL_LED_MODE_OFF);
-			HalLedSet(HAL_LED_4, HAL_LED_MODE_ON);
-		} else if(k%4 == 1) {
-			HalLedSet(HAL_LED_ALL, HAL_LED_MODE_OFF);
-			HalLedSet(HAL_LED_1, HAL_LED_MODE_ON);
-		} else if(k%4 == 2) {
-			HalLedSet(HAL_LED_ALL, HAL_LED_MODE_OFF);
-			HalLedSet(HAL_LED_2, HAL_LED_MODE_ON);
-		} else if(k%4 == 3) {
-			HalLedSet(HAL_LED_ALL, HAL_LED_MODE_OFF);
-			HalLedSet(HAL_LED_3, HAL_LED_MODE_ON);
-		}
+//		if(k%4 == 0) {
+//			HalLedSet(HAL_LED_ALL, HAL_LED_MODE_OFF);
+//			HalLedSet(HAL_LED_4, HAL_LED_MODE_ON);
+//		} else if(k%4 == 1) {
+//			HalLedSet(HAL_LED_ALL, HAL_LED_MODE_OFF);
+//			HalLedSet(HAL_LED_1, HAL_LED_MODE_ON);
+//		} else if(k%4 == 2) {
+//			HalLedSet(HAL_LED_ALL, HAL_LED_MODE_OFF);
+//			HalLedSet(HAL_LED_2, HAL_LED_MODE_ON);
+//		} else if(k%4 == 3) {
+//			HalLedSet(HAL_LED_ALL, HAL_LED_MODE_OFF);
+//			HalLedSet(HAL_LED_3, HAL_LED_MODE_ON);
+//		}
 
 //		if(osal_memcmp(newValueBuf, "abcd", 4)){
 //			HalLcdWriteString("compare ok", HAL_LCD_LINE_5);
@@ -743,3 +738,20 @@ char *bdAddr2Str(uint8 *pAddr) {
 }
 /*********************************************************************
  *********************************************************************/
+static int ascii2hex(char c) {
+	int ret = -1;
+	if ((c >= '0') && (c <= '9')) {
+		ret = c - '0';
+	} else if ((c >= 'A') && (c <= 'Z')) {
+		ret = c - 'A' + 65;
+	} else if ((c >= 'a') && (c <= 'z')) {
+		ret = c - 'a' + 97;
+	}
+	return ret;
+}
+static void updateDeviceName(char *name, uint8 len) {
+	uint8 k = 0;
+	for (k = 0; k < len; k++) {
+		scanRspData[k + 2] = ascii2hex(*(name + k));
+	}
+}

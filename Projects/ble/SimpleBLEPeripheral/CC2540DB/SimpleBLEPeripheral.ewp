@@ -1343,6 +1343,7 @@
           <state>POWER_SAVING</state>
           <state>HAL_LCD=TRUE</state>
           <state>HAL_LED=TRUE</state>
+          <state>HAL_UART=TRUE</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -8584,6 +8585,12 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\Source\SimpleBLEPeripheral_Main.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\SimpleBLESerialUart.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\SimpleBLESerialUart.h</name>
     </file>
   </group>
   <group>
