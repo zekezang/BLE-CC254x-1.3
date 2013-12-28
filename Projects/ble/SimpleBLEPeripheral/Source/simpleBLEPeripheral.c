@@ -75,7 +75,6 @@
 #include "gapbondmgr.h"
 
 #include "simpleBLEPeripheral.h"
-//#include "SimpleBLEInfraredSend.h"
 
 #if defined FEATURE_OAD
 #include "oad.h"
@@ -130,6 +129,12 @@
 #if defined ( PLUS_BROADCASTER )
 #define ADV_IN_CONN_WAIT                    500 // delay 500 ms
 #endif
+
+extern uint8 SBP_UART_STUDY_CMD;
+extern uint8 SBP_UART_STUDY_CMD_LEN;
+
+extern UartState u_state;
+extern uint8 UartBuffer[SBP_UART_RX_BUF_SIZE];
 
 /*********************************************************************
  * TYPEDEFS
@@ -203,7 +208,7 @@ static void simpleBLEPeripheral_HandleKeys(uint8 shift, uint8 keys);
 //static void simpleBLEPeripheralPasscodeCB(uint8 *deviceAddr, uint16 connectionHandle, uint8 uiInputs, uint8 uiOutputs);
 static void simpleBLEPeripheralPairStateCB(uint16 connHandle, uint8 state, uint8 status);
 static char *bdAddr2Str(uint8 *pAddr);
-static void updateDeviceName(char *name, uint8 len);
+//static void updateDeviceName(char *name, uint8 len);
 /*********************************************************************
  * PROFILE CALLBACKS
  */
@@ -269,17 +274,17 @@ static void readWriteFlash() {
 //	aa = osal_msg_allocate(15);
 //	osal_memset(aa, 0, 15);
 //	osal_memcpy(aa, "as", 2);
-	uint16 p = 1234;
-	if (osal_snv_write(0xE0, sizeof(uint16), &p) == SUCCESS) {
-		HalLcdWriteString("write ok", HAL_LCD_LINE_2);
-	}
+//	uint16 p = 1234;
+//	if (osal_snv_write(0xE0, sizeof(uint16), &p) == SUCCESS) {
+//		HalLcdWriteString("write ok", HAL_LCD_LINE_2);
+//	}
 //	osal_msg_deallocate(aa);
 //	uint8 bb[15] = { 0x0 };
-	uint16 bb = 0;
-	if (osal_snv_read(0xE0, 15, &bb) == SUCCESS) {
-		HalLcdWriteString("read ok", HAL_LCD_LINE_2);
-		passs = bb;
-	}
+//	uint16 bb = 0;
+//	if (osal_snv_read(0xE0, 15, &bb) == SUCCESS) {
+//		HalLcdWriteString("read ok", HAL_LCD_LINE_2);
+//		passs = bb;
+//	}
 }
 
 /*********************************************************************
@@ -340,7 +345,7 @@ void SimpleBLEPeripheral_Init(uint8 task_id) {
 		GAPRole_SetParameter(GAPROLE_TIMEOUT_MULTIPLIER, sizeof(uint16), &desired_conn_timeout);
 	}
 
-	readWriteFlash();
+	//readWriteFlash();
 
 	// Set the GAP Characteristics
 	GGS_SetParameter(GGS_DEVICE_NAME_ATT, GAP_DEVICE_NAME_LEN, attDeviceName);
@@ -355,10 +360,10 @@ void SimpleBLEPeripheral_Init(uint8 task_id) {
 		GAP_SetParamValue(TGAP_GEN_DISC_ADV_INT_MAX, advInt);
 	}
 
-	HalLcdWriteStringValue("bb:", passs, 10, HAL_LCD_LINE_6);
+	//HalLcdWriteStringValue("bb:", passs, 10, HAL_LCD_LINE_6);
 	// Setup the GAP Bond Manager
 	{
-		uint32 passkey = passs; // passkey "000000"
+		uint32 passkey = 1234; // passkey "000000"
 		//uint8 pairMode = GAPBOND_PAIRING_MODE_WAIT_FOR_REQ;
 		uint8 pairMode = GAPBOND_PAIRING_MODE_INITIATE;
 		uint8 mitm = TRUE;
@@ -404,6 +409,9 @@ void SimpleBLEPeripheral_Init(uint8 task_id) {
 	// This reduces active current while radio is active and CC254x MCU
 	// is halted
 	HCI_EXT_ClkDivOnHaltCmd(HCI_EXT_ENABLE_CLK_DIVIDE_ON_HALT);
+
+	// Register for all key events - This app will handle all key events
+	RegisterForKeys(simpleBLEPeripheral_TaskID);
 
 #if defined ( DC_DC_P0_7 )
 	// Enable stack to toggle bypass control on TPS62730 (DC/DC converter)
@@ -511,10 +519,57 @@ static void simpleBLEPeripheral_ProcessOSALMsg(osal_event_hdr_t *pMsg) {
 	}
 }
 
+
+uint8 test[121] = {
+		0xE3, 0x78, 0x23, 0x75, 0x8C,
+		0xEC, 0x34, 0x5C, 0xC1, 0x51,
+		0x0F, 0x5E, 0x46, 0xFC, 0x6C,
+		0x4E, 0xF9, 0x43, 0x0E, 0x5E,
+		0x38, 0x09, 0x63, 0x4E, 0x04,
+		0xF5, 0x23, 0x11, 0x87, 0xAB,
+		0x78, 0x01, 0x05, 0xF6, 0x23,
+		0x11, 0x87, 0xAB, 0x78, 0x01,
+		0x05, 0xF6, 0x23, 0x11, 0x87,
+		0xAB, 0x78, 0x01, 0x05, 0xF6,
+		0x23, 0x11, 0x87, 0xAB, 0x78,
+		0x01, 0x05, 0xF6, 0x23, 0x11,
+		0x87, 0xAB, 0x78, 0x01, 0x05,
+		0xF6, 0x23, 0x11, 0x87, 0xAB,
+		0x79, 0x22, 0x17, 0x17, 0x45,
+		0x23, 0xA8, 0xBD, 0x8A, 0x12,
+		0x16, 0x17, 0x34, 0x33, 0xA9,
+		0xBD, 0x99, 0x12, 0x27, 0x18,
+		0x45, 0x33, 0x98, 0xBC, 0x8B,
+		0x02, 0x26, 0x08, 0x44, 0x33,
+		0x99, 0xCC, 0x8A, 0x13, 0x16,
+		0x07, 0x44, 0x22, 0xA9, 0xCD,
+		0x8A, 0x22, 0x16, 0x18, 0x45,
+		0x33, 0xA9, 0xBC, 0x89, 0x15,
+		0x32,
+};
 static void simpleBLEPeripheral_HandleKeys(uint8 shift, uint8 keys) {
-	(void) shift; // Intentionally unreferenced parameter
 	if (keys & HAL_KEY_UP) {
+		u_state = IR_DATA_STUDY_CMD_START_BEGIN_STATE;
+		sbpSerialAppWrite(&SBP_UART_STUDY_CMD, SBP_UART_STUDY_CMD_LEN);
 	}
+
+	if (keys & HAL_KEY_LEFT) {
+//		uint8 k = 0;
+//		if (osal_snv_read(0xE0, 1, &k) == SUCCESS) {
+//			HalLcdWriteString("read ok", HAL_LCD_LINE_2);
+//		}
+//		uint8 bbb[255];
+//		osal_memset(bbb, 0, 255);
+//		if (osal_snv_read(0xE0, k, bbb) == SUCCESS) {
+//			HalLcdWriteString("read ok", HAL_LCD_LINE_2);
+//		}
+		uint8 kkkkk[255];
+		osal_memset(kkkkk, 0, 255);
+		kkkkk[0] = 0xE3;
+		osal_memcpy(kkkkk + 1, UartBuffer, 120);
+		sbpSerialAppWrite(kkkkk, 121);
+	}
+
 }
 
 /*********************************************************************
@@ -738,20 +793,20 @@ char *bdAddr2Str(uint8 *pAddr) {
 }
 /*********************************************************************
  *********************************************************************/
-static int ascii2hex(char c) {
-	int ret = -1;
-	if ((c >= '0') && (c <= '9')) {
-		ret = c - '0';
-	} else if ((c >= 'A') && (c <= 'Z')) {
-		ret = c - 'A' + 65;
-	} else if ((c >= 'a') && (c <= 'z')) {
-		ret = c - 'a' + 97;
-	}
-	return ret;
-}
-static void updateDeviceName(char *name, uint8 len) {
-	uint8 k = 0;
-	for (k = 0; k < len; k++) {
-		scanRspData[k + 2] = ascii2hex(*(name + k));
-	}
-}
+//static int ascii2hex(char c) {
+//	int ret = -1;
+//	if ((c >= '0') && (c <= '9')) {
+//		ret = c - '0';
+//	} else if ((c >= 'A') && (c <= 'Z')) {
+//		ret = c - 'A' + 65;
+//	} else if ((c >= 'a') && (c <= 'z')) {
+//		ret = c - 'a' + 97;
+//	}
+//	return ret;
+//}
+//static void updateDeviceName(char *name, uint8 len) {
+//	uint8 k = 0;
+//	for (k = 0; k < len; k++) {
+//		scanRspData[k + 2] = ascii2hex(*(name + k));
+//	}
+//}

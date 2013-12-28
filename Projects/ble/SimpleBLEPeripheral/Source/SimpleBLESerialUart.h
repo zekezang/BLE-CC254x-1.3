@@ -1,5 +1,13 @@
-#ifndef _SERIAL_APP_H_
-#define _SERIAL_APP_H_
+/*
+ * SimpleBLESerialUart1.h
+ *
+ *  Created on: 2013-12-28
+ *      Author: zekezang
+ */
+
+#ifndef SIMPLEBLESERIALUART_H_
+#define SIMPLEBLESERIALUART_H_
+
 
 #ifdef __cplusplus
 extern "C"
@@ -9,11 +17,19 @@ extern "C"
 #define SBP_UART_PORT                  HAL_UART_PORT_0
 #define SBP_UART_FC                    FALSE
 #define SBP_UART_FC_THRESHOLD          48
-#define SBP_UART_RX_BUF_SIZE           128
+#define SBP_UART_RX_BUF_SIZE           255
 #define SBP_UART_TX_BUF_SIZE           128
 #define SBP_UART_IDLE_TIMEOUT          6
 #define SBP_UART_INT_ENABLE            TRUE
-#define SBP_UART_BR                    HAL_UART_BR_57600
+#define SBP_UART_BR                    HAL_UART_BR_9600
+
+#define UART_HAL_DELAY(n) st( { volatile uint32 i; for (i=0; i<(n); i++) { }; } )
+
+typedef enum {
+	IR_DATA_STUDY_CMD_START_BEGIN_STATE,
+	IR_DATA_STUDY_CMD_START_END_STATE,
+	IR_DATA_STUDY_CMD_RECV_END_STATE,
+} UartState;
 
 // Serial Port Related
 extern void SerialApp_Init(uint8 taskID);
@@ -25,4 +41,6 @@ void sbpSerialAppWrite(uint8 *pBuffer, uint16 length);
 }
 #endif
 
-#endif
+
+
+#endif /* SIMPLEBLESERIALUART_H_ */

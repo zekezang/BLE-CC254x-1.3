@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=-1318855251
+Checksum=1608361352
 [DisAssemblyWindow]
 NumStates=_ 2
 State 1=_ 1
@@ -30,6 +30,15 @@ LimitSize=0
 ByteLimit=50
 [CallStack]
 ShowArgs=0
+[Disassembly]
+MixedMode=1
+[Breakpoints]
+Bp0=_ "STD_CODE" "{$PROJ_DIR$\..\Source\simpleBLEPeripheral.c}.567.3" 1 0 0 0 "" 0 ""
+Bp1=_ "STD_CODE" "{$PROJ_DIR$\..\Source\SimpleBLESerialUart.c}.96.3" 0 0 0 0 "" 0 ""
+Count=2
+[ChipconEmu]
+Stop timers on halt=0
+Leave target running=1
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -37,11 +46,6 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
-[Breakpoints]
-Count=0
-[ChipconEmu]
-Stop timers on halt=0
-Leave target running=1
 [Aliases]
 A0=_ "D:\BLE\BLE-CC254x-1.3\Projects\ble\Profiles\Roles\gap.c" ""
 A1=_ "D:\BLE\BLE-CC254x-1.3\Projects\ble\SimpleBLEPeripheral\Source\SimpleBLEPeripheral_Main.c" ""
