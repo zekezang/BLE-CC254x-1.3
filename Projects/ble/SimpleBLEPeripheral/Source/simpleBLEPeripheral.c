@@ -554,6 +554,7 @@ static void simpleBLEPeripheral_HandleKeys(uint8 shift, uint8 keys) {
 	}
 
 	if (keys & HAL_KEY_LEFT) {
+		u_state = IR_DATA_SEND_BEGIN_STATE;
 //		uint8 k = 0;
 //		if (osal_snv_read(0xE0, 1, &k) == SUCCESS) {
 //			HalLcdWriteString("read ok", HAL_LCD_LINE_2);

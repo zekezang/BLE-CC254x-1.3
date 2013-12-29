@@ -53,22 +53,25 @@ void serialAppInitTransport() {
 
 void studyCompletedAndBroadcastData() {
 	HalLcdWriteString("write ...", HAL_LCD_LINE_4);
-	if (osal_snv_write(0xE0, UartBuffer[0], UartBuffer) == SUCCESS) {
-		HalLcdWriteString("write ok", HAL_LCD_LINE_4);
-	}
+//	if (osal_snv_write(0xE0, UartBuffer[0], UartBuffer) == SUCCESS) {
+//		HalLcdWriteString("write ok", HAL_LCD_LINE_4);
+//	}
 }
 
+void SbpHalUARTRead(uint8 port, uint8 *buf, uint16 len);
 /*uart接收回调函数*/
 uint16 numBytes;
 uint16 i, point, irdatalen;
 uint8 pktBuffer[SBP_UART_RX_BUF_SIZE];
+uint8 UART_PORT_HAVE_READ = 0;
 
 void sbpSerialAppCallback(uint8 port, uint8 event) {
-	UART_HAL_DELAY(20000);
+	UART_PORT_HAVE_READ = 0;
+	UART_HAL_DELAY(35000);
 	numBytes = Hal_UART_RxBufLen(port);
 	HalLcdWriteStringValue("numBytes", numBytes, 10, HAL_LCD_LINE_2);
 	if (numBytes > 0 && (u_state == IR_DATA_STUDY_CMD_START_BEGIN_STATE)) {
-		HalUARTRead(port, pktBuffer, numBytes);
+		SbpHalUARTRead(port, pktBuffer, numBytes);
 		HalLcdWriteStringValue("pktBuffer", pktBuffer[0], 16, HAL_LCD_LINE_3);
 		if (pktBuffer[0] == SBP_UART_STUDY_CMD) {
 			osal_memset(UartBuffer, 0, SBP_UART_RX_BUF_SIZE);
@@ -77,7 +80,7 @@ void sbpSerialAppCallback(uint8 port, uint8 event) {
 			u_state = IR_DATA_STUDY_CMD_START_END_STATE;
 		}
 	} else if (numBytes > 0 && (u_state == IR_DATA_STUDY_CMD_START_END_STATE)) {
-		HalUARTRead(port, pktBuffer, numBytes);
+		SbpHalUARTRead(port, pktBuffer, numBytes);
 		if (irdatalen == 0) {
 			irdatalen = pktBuffer[0];
 		}
@@ -87,10 +90,26 @@ void sbpSerialAppCallback(uint8 port, uint8 event) {
 			u_state = IR_DATA_STUDY_CMD_RECV_END_STATE;
 			studyCompletedAndBroadcastData();
 		}
+	} else if (numBytes > 0 && (u_state == IR_DATA_SEND_BEGIN_STATE)) {
+		SbpHalUARTRead(port, pktBuffer, numBytes);
+		HalLcdWriteStringValue("send resp:", pktBuffer[0], 16, HAL_LCD_LINE_6);
+		u_state = IR_DATA_SEND_END_RESP_STATE;
 	}
 
+
+	if (numBytes > 0 && UART_PORT_HAVE_READ == 0) {
+		SbpHalUARTRead(port, pktBuffer, numBytes);
+		HalLcdWriteStringValue("HAVE_READ", pktBuffer[0], 16, HAL_LCD_LINE_6);
+	}
 }
+
+void SbpHalUARTRead(uint8 port, uint8 *buf, uint16 len) {
+	UART_HAL_DELAY(1000);
+	HalUARTRead(port, pktBuffer, numBytes);
+	UART_PORT_HAVE_READ = 1;
+}
+
 void sbpSerialAppWrite(uint8 *pBuffer, uint16 length) {
-	//UART_HAL_DELAY(5000);
+	UART_HAL_DELAY(1000);
 	HalUARTWrite(SBP_UART_PORT, pBuffer, length);
 }
