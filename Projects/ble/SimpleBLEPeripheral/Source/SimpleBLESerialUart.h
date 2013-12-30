@@ -34,10 +34,10 @@ typedef enum {
 } UartState;
 
 // Serial Port Related
-extern void SerialApp_Init(uint8 taskID);
-extern void sbpSerialAppCallback(uint8 port, uint8 event);
-void serialAppInitTransport();
-void sbpSerialAppWrite(uint8 *pBuffer, uint16 length);
+extern void SbpHalUART_Init(uint8 taskID);
+extern void SbpHalUARTReadCallback(uint8 port, uint8 event);
+void SbpHalUARTInit();
+void SbpHalUARTWrite(uint8 *pBuffer, uint16 length);
 
 #ifdef __cplusplus
 }

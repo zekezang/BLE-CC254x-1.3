@@ -2,7 +2,7 @@
 #                                                                              #
 #      IAR Universal Linker V5.4.1.30                                          #
 #                                                                              #
-#           Link time     =  29/Dec/2013  22:27:28                             #
+#           Link time     =  30/Dec/2013  12:20:33                             #
 #           Target CPU    =  x51                                               #
 #           List file     =  D:\ble_workspace\BLE-CC254x-1.3\Projects\ble\Simp #
 #                            leBLEPeripheral\CC2540DB\CC2540\List\SimpleBLEPer #
@@ -17872,6 +17872,7 @@ BANK_RELAYS
                                                    HalLcdWriteString (hal_lcd)
                                                    HalLcdWriteStringValue (hal_lcd)
                                                    LL_RandCback (hci)
+                                                   SbpHalUARTReadCallback (SimpleBLESerialUart)
                                                    Segment part 145 (att_util)
                                                    Segment part 22 (gap_linkmgr)
                                                    Segment part 29 (sm_mgr)
@@ -17897,7 +17898,6 @@ BANK_RELAYS
                                                    gattNotifyEvent (gatt_task)
                                                    gattServApp_ProcessPrepareWriteReq (gattservapp)
                                                    linkDB_Add (linkdb)
-                                                   sbpSerialAppCallback (SimpleBLESerialUart)
                                                    simpleBLEPeripheral_HandleKeys (simpleBLEPeripheral)
                                                    simpleProfileChangeCB (simpleBLEPeripheral)
                                                    simpleProfile_ReadAttrCB (simpleGATTprofile)
@@ -17953,6 +17953,7 @@ BANK_RELAYS
                                                    LL_ConnectionCompleteCback (hci_event)
                                                    SM_StartPairing (sm_pairing)
                                                    SM_VerifyAuthenSig (sm_mgr)
+                                                   SbpHalUARTReadCallback (SimpleBLESerialUart)
                                                    Segment part 47 (sm_mgr)
                                                    Segment part 88 (gap_linkmgr)
                                                    gapBondMgrAddBond (gapbondmgr)
@@ -17974,7 +17975,6 @@ BANK_RELAYS
                                                    linkDB_Remove (linkdb)
                                                    osalInitTasks (OSAL_SimpleBLEPeripheral)
                                                    osal_CbTimerInit (osal_cbtimer)
-                                                   sbpSerialAppCallback (SimpleBLESerialUart)
                                                    sendEstLinkEvent (gap_linkmgr)
                                                    simpleBLEPeripheral_HandleKeys (simpleBLEPeripheral)
                                                    simpleProfileChangeCB (simpleBLEPeripheral)
@@ -19017,7 +19017,7 @@ SFR_AN
   ======================
 XDATA_I
   Relative segment, address: XDATA 00000E11 - 00000E11 (0x1 bytes), align: 0
-  Segment part 11.            Intra module refs:   sbpSerialAppCallback
+  Segment part 11.            Intra module refs:   SbpHalUARTReadCallback
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            SBP_UART_STUDY_CMD      00000E11        simpleBLEPeripheral_HandleKeys (simpleBLEPeripheral)
@@ -19032,31 +19032,31 @@ XDATA_I
     -------------------------------------------------------------------------
 XDATA_Z
   Relative segment, address: XDATA 00000775 - 00000775 (0x1 bytes), align: 0
-  Segment part 15.            Intra module refs:   sbpSerialAppCallback
+  Segment part 15.            Intra module refs:   SbpHalUARTReadCallback
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            u_state                 00000775        simpleBLEPeripheral_HandleKeys (simpleBLEPeripheral)
     -------------------------------------------------------------------------
 XDATA_Z
   Relative segment, address: XDATA 00000776 - 00000874 (0xff bytes), align: 0
-  Segment part 16.            Intra module refs:   sbpSerialAppCallback
+  Segment part 16.            Intra module refs:   SbpHalUARTReadCallback
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            UartBuffer              00000776        simpleBLEPeripheral_HandleKeys (simpleBLEPeripheral)
     -------------------------------------------------------------------------
 <BANKED_CODE> 2 (was BANKED_CODE)
   Relative segment, address: CODE 00018DC2 - 00018DC8 (0x7 bytes), align: 0
-  Segment part 26.            Intra module refs:   SerialApp_Init::?relay
+  Segment part 26.            Intra module refs:   SbpHalUART_Init::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           SerialApp_Init          00018DC2 
+           SbpHalUART_Init         00018DC2 
                calls direct
                ISTACK = 00000000 ( 00000002 )
     -------------------------------------------------------------------------
 <BANKED_CODE> 2 (was BANKED_CODE)
   Relative segment, address: CODE 00018DC9 - 00018DCF (0x7 bytes), align: 0
-  Segment part 28.            Intra module refs:   SerialApp_Init
-                                                   serialAppInitTransport
+  Segment part 28.            Intra module refs:   SbpHalUARTInit
+                                                   SbpHalUART_Init
                                                    studyCompletedAndBroadcastData
            LOCAL                   ADDRESS         
            =====                   =======         
@@ -19064,11 +19064,10 @@ XDATA_Z
     -------------------------------------------------------------------------
 <BANKED_CODE> 2 (was BANKED_CODE)
   Relative segment, address: CODE 00018DD0 - 00018E40 (0x71 bytes), align: 0
-  Segment part 29.            Intra module refs:   serialAppInitTransport::?relay
+  Segment part 29.            Intra module refs:   SbpHalUARTInit::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           serialAppInitTransport
-                                   00018DD0 
+           SbpHalUARTInit          00018DD0 
                calls direct
                XSTACK = 00000000 ( 0000001D )
                ISTACK = 00000000 ( 00000002 )
@@ -19088,7 +19087,7 @@ XDATA_Z
   Relative segment, address: XDATA 00000875 - 00000876 (0x2 bytes), align: 0
   Segment part 17.            Intra module refs:   ?Subroutine3
                                                    ?Subroutine5
-                                                   sbpSerialAppCallback
+                                                   SbpHalUARTReadCallback
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            numBytes                00000875 
@@ -19096,14 +19095,14 @@ XDATA_Z
 XDATA_Z
   Relative segment, address: XDATA 00000877 - 00000878 (0x2 bytes), align: 0
   Segment part 19.            Intra module refs:   ?Subroutine4
-                                                   sbpSerialAppCallback
+                                                   SbpHalUARTReadCallback
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            point                   00000877 
     -------------------------------------------------------------------------
 XDATA_Z
   Relative segment, address: XDATA 00000879 - 0000087A (0x2 bytes), align: 0
-  Segment part 20.            Intra module refs:   sbpSerialAppCallback
+  Segment part 20.            Intra module refs:   SbpHalUARTReadCallback
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            irdatalen               00000879 
@@ -19111,7 +19110,7 @@ XDATA_Z
 XDATA_Z
   Relative segment, address: XDATA 0000087B - 00000979 (0xff bytes), align: 0
   Segment part 21.            Intra module refs:   ?Subroutine5
-                                                   sbpSerialAppCallback
+                                                   SbpHalUARTReadCallback
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            pktBuffer               0000087B 
@@ -19119,39 +19118,40 @@ XDATA_Z
 XDATA_Z
   Relative segment, address: XDATA 0000097A - 0000097A (0x1 bytes), align: 0
   Segment part 22.            Intra module refs:   SbpHalUARTRead
-                                                   sbpSerialAppCallback
+                                                   SbpHalUARTReadCallback
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            UART_PORT_HAVE_READ     0000097A 
     -------------------------------------------------------------------------
 <BANKED_CODE> 2 (was BANKED_CODE)
   Relative segment, address: CODE 00018E51 - 00018FDE (0x18e bytes), align: 0
-  Segment part 33.            Intra module refs:   sbpSerialAppCallback::?relay
+  Segment part 33.            Intra module refs:   SbpHalUARTReadCallback::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           sbpSerialAppCallback    00018E51 
+           SbpHalUARTReadCallback
+                                   00018E51 
                calls direct, is indirectly called
                XSTACK = 00000000 ( 00000012 )
     -------------------------------------------------------------------------
 <BANKED_CODE> 2 (was BANKED_CODE)
   Relative segment, address: CODE 00018FDF - 00018FE8 (0xa bytes), align: 0
   Segment part 35.            Intra module refs:   SbpHalUARTRead
-                                                   sbpSerialAppCallback
-                                                   sbpSerialAppWrite
+                                                   SbpHalUARTReadCallback
+                                                   SbpHalUARTWrite
            LOCAL                   ADDRESS         
            =====                   =======         
            ?Subroutine1            00018FDF 
     -------------------------------------------------------------------------
 <BANKED_CODE> 2 (was BANKED_CODE)
   Relative segment, address: CODE 00018FE9 - 00018FF2 (0xa bytes), align: 0
-  Segment part 36.            Intra module refs:   sbpSerialAppCallback
+  Segment part 36.            Intra module refs:   SbpHalUARTReadCallback
            LOCAL                   ADDRESS         
            =====                   =======         
            ?Subroutine4            00018FE9 
     -------------------------------------------------------------------------
 <BANKED_CODE> 2 (was BANKED_CODE)
   Relative segment, address: CODE 00018FF3 - 00018FF5 (0x3 bytes), align: 0
-  Segment part 37.            Intra module refs:   sbpSerialAppCallback
+  Segment part 37.            Intra module refs:   SbpHalUARTReadCallback
            LOCAL                   ADDRESS         
            =====                   =======         
            ?Subroutine3            00018FF3 
@@ -19159,11 +19159,11 @@ XDATA_Z
 <BANKED_CODE> 2 (was BANKED_CODE)
   Relative segment, address: CODE 00018FF6 - 00018FFD (0x8 bytes), align: 0
   Segment part 38.            Intra module refs:   ?Subroutine3
-                                                   sbpSerialAppCallback
+                                                   SbpHalUARTReadCallback
     -------------------------------------------------------------------------
 <BANKED_CODE> 2 (was BANKED_CODE)
   Relative segment, address: CODE 00018FFE - 00019003 (0x6 bytes), align: 0
-  Segment part 39.            Intra module refs:   sbpSerialAppCallback
+  Segment part 39.            Intra module refs:   SbpHalUARTReadCallback
            LOCAL                   ADDRESS         
            =====                   =======         
            ?Subroutine2            00018FFE 
@@ -19187,10 +19187,10 @@ XDATA_Z
     -------------------------------------------------------------------------
 <BANKED_CODE> 2 (was BANKED_CODE)
   Relative segment, address: CODE 00019061 - 000190B3 (0x53 bytes), align: 0
-  Segment part 43.            Intra module refs:   sbpSerialAppWrite::?relay
+  Segment part 43.            Intra module refs:   SbpHalUARTWrite::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           sbpSerialAppWrite       00019061 
+           SbpHalUARTWrite         00019061 
                calls direct
                XSTACK = 00000000 ( 00000010 )
     -------------------------------------------------------------------------
@@ -19207,20 +19207,20 @@ BANK_RELAYS
   Segment part 27.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           SerialApp_Init::?relay
+           SbpHalUART_Init::?relay
                                    00001130        SimpleBLEPeripheral_Init (simpleBLEPeripheral)
     -------------------------------------------------------------------------
 BANK_RELAYS
   Relative segment, address: CODE 00001136 - 0000113B (0x6 bytes), align: 0
-  Segment part 30.            Intra module refs:   SerialApp_Init
+  Segment part 30.            Intra module refs:   SbpHalUART_Init
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           serialAppInitTransport::?relay
+           SbpHalUARTInit::?relay
                                    00001136 
     -------------------------------------------------------------------------
 BANK_RELAYS
   Relative segment, address: CODE 0000113C - 00001141 (0x6 bytes), align: 0
-  Segment part 32.            Intra module refs:   sbpSerialAppCallback
+  Segment part 32.            Intra module refs:   SbpHalUARTReadCallback
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            studyCompletedAndBroadcastData::?relay
@@ -19228,15 +19228,15 @@ BANK_RELAYS
     -------------------------------------------------------------------------
 BANK_RELAYS
   Relative segment, address: CODE 00001142 - 00001147 (0x6 bytes), align: 0
-  Segment part 34.            Intra module refs:   serialAppInitTransport
+  Segment part 34.            Intra module refs:   SbpHalUARTInit
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           sbpSerialAppCallback::?relay
+           SbpHalUARTReadCallback::?relay
                                    00001142 
     -------------------------------------------------------------------------
 BANK_RELAYS
   Relative segment, address: CODE 00001148 - 0000114D (0x6 bytes), align: 0
-  Segment part 41.            Intra module refs:   sbpSerialAppCallback
+  Segment part 41.            Intra module refs:   SbpHalUARTReadCallback
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            SbpHalUARTRead::?relay
@@ -19247,7 +19247,7 @@ BANK_RELAYS
   Segment part 44.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           sbpSerialAppWrite::?relay
+           SbpHalUARTWrite::?relay
                                    0000114E        simpleBLEPeripheral_HandleKeys (simpleBLEPeripheral)
                                                    simpleProfileChangeCB (simpleBLEPeripheral)
     -------------------------------------------------------------------------
@@ -19257,19 +19257,19 @@ BANK_RELAYS
     -------------------------------------------------------------------------
 <XDATA_ROM_C> 1 (was XDATA_ROM_C)
   Relative segment, address: CONST 000091EF - 000091F7 (0x9 bytes), align: 0
-  Segment part 7.             Intra module refs:   sbpSerialAppCallback
+  Segment part 7.             Intra module refs:   SbpHalUARTReadCallback
     -------------------------------------------------------------------------
 <XDATA_ROM_C> 1 (was XDATA_ROM_C)
   Relative segment, address: CONST 000091D1 - 000091DA (0xa bytes), align: 0
-  Segment part 8.             Intra module refs:   sbpSerialAppCallback
+  Segment part 8.             Intra module refs:   SbpHalUARTReadCallback
     -------------------------------------------------------------------------
 <XDATA_ROM_C> 1 (was XDATA_ROM_C)
   Relative segment, address: CONST 000091B2 - 000091BC (0xb bytes), align: 0
-  Segment part 9.             Intra module refs:   sbpSerialAppCallback
+  Segment part 9.             Intra module refs:   SbpHalUARTReadCallback
     -------------------------------------------------------------------------
 <XDATA_ROM_C> 1 (was XDATA_ROM_C)
   Relative segment, address: CONST 000091E5 - 000091EE (0xa bytes), align: 0
-  Segment part 10.            Intra module refs:   sbpSerialAppCallback
+  Segment part 10.            Intra module refs:   SbpHalUARTReadCallback
     -------------------------------------------------------------------------
 <XDATA_ROM_C> 1 (was XDATA_ROM_C)
   Relative segment, address: CONST 00009247 - 0000924A (0x4 bytes), align: 0
@@ -19277,11 +19277,11 @@ BANK_RELAYS
                                                    LL_ENC_Encrypt (ll_enc)
                                                    LL_TxData (ll)
                                                    SbpHalUARTRead
+                                                   SbpHalUARTReadCallback
+                                                   SbpHalUARTWrite
                                                    gapIncSignCounter (gap_configmgr)
                                                    llFindStartType (ll_scheduler)
                                                    llSetupNextSlaveEvent (ll_slaveEndCauses)
-                                                   sbpSerialAppCallback
-                                                   sbpSerialAppWrite
                                                    simpleProfileChangeCB (simpleBLEPeripheral)
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
@@ -19289,7 +19289,7 @@ BANK_RELAYS
     -------------------------------------------------------------------------
 <XDATA_ROM_C> 1 (was XDATA_ROM_C)
   Relative segment, address: CONST 0000924B - 0000924E (0x4 bytes), align: 0
-  Segment part 24.            Intra module refs:   sbpSerialAppCallback
+  Segment part 24.            Intra module refs:   SbpHalUARTReadCallback
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            __Constant_88b8         0000924B 
@@ -19297,8 +19297,8 @@ BANK_RELAYS
 <XDATA_ROM_C> 1 (was XDATA_ROM_C)
   Relative segment, address: CONST 0000924F - 00009252 (0x4 bytes), align: 0
   Segment part 25.            Intra module refs:   SbpHalUARTRead
+                                                   SbpHalUARTWrite
                                                    gapWriteAdvEnableStatus (gap_peridevmgr)
-                                                   sbpSerialAppWrite
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            __Constant_3e8          0000924F 
@@ -21980,8 +21980,8 @@ BANK_RELAYS
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            HalLcdWriteStringValue::?relay
-                                   0000128C        peripheralStateNotificationCB (simpleBLEPeripheral)
-                                                   sbpSerialAppCallback (SimpleBLESerialUart)
+                                   0000128C        SbpHalUARTReadCallback (SimpleBLESerialUart)
+                                                   peripheralStateNotificationCB (simpleBLEPeripheral)
                                                    simpleBLEPeripheralPairStateCB (simpleBLEPeripheral)
                                                    simpleProfileChangeCB (simpleBLEPeripheral)
     -------------------------------------------------------------------------
@@ -22895,7 +22895,7 @@ BANK_RELAYS
   Segment part 51.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           HalUARTOpen::?relay     0000131C        serialAppInitTransport (SimpleBLESerialUart)
+           HalUARTOpen::?relay     0000131C        SbpHalUARTInit (SimpleBLESerialUart)
     -------------------------------------------------------------------------
 BANK_RELAYS
   Relative segment, address: CODE 00001322 - 00001327 (0x6 bytes), align: 0
@@ -22909,7 +22909,7 @@ BANK_RELAYS
   Segment part 55.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           HalUARTWrite::?relay    00001328        sbpSerialAppWrite (SimpleBLESerialUart)
+           HalUARTWrite::?relay    00001328        SbpHalUARTWrite (SimpleBLESerialUart)
     -------------------------------------------------------------------------
 BANK_RELAYS
   Relative segment, address: CODE 0000132E - 00001333 (0x6 bytes), align: 0
@@ -22924,7 +22924,7 @@ BANK_RELAYS
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            Hal_UART_RxBufLen::?relay
-                                   00001334        sbpSerialAppCallback (SimpleBLESerialUart)
+                                   00001334        SbpHalUARTReadCallback (SimpleBLESerialUart)
     -------------------------------------------------------------------------
 BANK_RELAYS
   Relative segment, address: CODE 0000133A - 0000133F (0x6 bytes), align: 0
@@ -25780,6 +25780,8 @@ VREG
                                                    SM_StartPairing (sm_pairing)
                                                    SM_VerifyAuthenSig (sm_mgr)
                                                    SbpHalUARTRead (SimpleBLESerialUart)
+                                                   SbpHalUARTReadCallback (SimpleBLESerialUart)
+                                                   SbpHalUARTWrite (SimpleBLESerialUart)
                                                    Segment part 100 (gattservapp)
                                                    Segment part 101 (gattservapp)
                                                    Segment part 102 (gap_linkmgr)
@@ -26129,8 +26131,6 @@ VREG
                                                    peripheralStateNotificationCB (simpleBLEPeripheral)
                                                    phyFindWlEntry (phy)
                                                    reportStatusChange (linkdb)
-                                                   sbpSerialAppCallback (SimpleBLESerialUart)
-                                                   sbpSerialAppWrite (SimpleBLESerialUart)
                                                    sendAuthEvent (gap_linkmgr)
                                                    sendEstLinkEvent (gap_linkmgr)
                                                    sendTerminateEvent (gap_linkmgr)
@@ -26257,7 +26257,10 @@ XSP
                                                    SM_CalcRandomAddr (sm_mgr)
                                                    SM_GenerateAuthenSig (sm_mgr)
                                                    SM_VerifyAuthenSig (sm_mgr)
+                                                   SbpHalUARTInit (SimpleBLESerialUart)
                                                    SbpHalUARTRead (SimpleBLESerialUart)
+                                                   SbpHalUARTReadCallback (SimpleBLESerialUart)
+                                                   SbpHalUARTWrite (SimpleBLESerialUart)
                                                    Segment part 101 (gattservapp)
                                                    Segment part 155 (hci_event)
                                                    Segment part 35 (ll_timer2)
@@ -26328,9 +26331,6 @@ XSP
                                                    osalTimerUpdate (OSAL_Timers)
                                                    osal_snv_write (osal_snv)
                                                    peripheralStateNotificationCB (simpleBLEPeripheral)
-                                                   sbpSerialAppCallback (SimpleBLESerialUart)
-                                                   sbpSerialAppWrite (SimpleBLESerialUart)
-                                                   serialAppInitTransport (SimpleBLESerialUart)
                                                    setActivePage (osal_snv)
                                                    simpleBLEPeripheral_HandleKeys (simpleBLEPeripheral)
                                                    simpleProfileChangeCB (simpleBLEPeripheral)
@@ -26726,8 +26726,11 @@ CSTART
                                                    SM_ResponderInit::?relay (sm_rsppairing)
                                                    SM_StartPairing::?relay (sm_pairing)
                                                    SM_VerifyAuthenSig::?relay (sm_mgr)
+                                                   SbpHalUARTInit::?relay (SimpleBLESerialUart)
                                                    SbpHalUARTRead::?relay (SimpleBLESerialUart)
-                                                   SerialApp_Init::?relay (SimpleBLESerialUart)
+                                                   SbpHalUARTReadCallback::?relay (SimpleBLESerialUart)
+                                                   SbpHalUARTWrite::?relay (SimpleBLESerialUart)
+                                                   SbpHalUART_Init::?relay (SimpleBLESerialUart)
                                                    SimpleBLEPeripheral_Init::?relay (simpleBLEPeripheral)
                                                    SimpleBLEPeripheral_ProcessEvent::?relay (simpleBLEPeripheral)
                                                    SimpleProfile_AddService::?relay (simpleGATTprofile)
@@ -27031,12 +27034,9 @@ CSTART
                                                    peripheralStateNotificationCB::?relay (simpleBLEPeripheral)
                                                    phyFindWlEntry::?relay (phy)
                                                    reportStatusChange::?relay (linkdb)
-                                                   sbpSerialAppCallback::?relay (SimpleBLESerialUart)
-                                                   sbpSerialAppWrite::?relay (SimpleBLESerialUart)
                                                    sendAuthEvent::?relay (gap_linkmgr)
                                                    sendEstLinkEvent::?relay (gap_linkmgr)
                                                    sendTerminateEvent::?relay (gap_linkmgr)
-                                                   serialAppInitTransport::?relay (SimpleBLESerialUart)
                                                    setActivePage::?relay (osal_snv)
                                                    set_ddram_line_col::?relay (hal_lcd)
                                                    simpleBLEPeripheralPairStateCB::?relay (simpleBLEPeripheral)
@@ -27163,9 +27163,9 @@ RCODE
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            ?UL_GT_X                0000147F        SbpHalUARTRead (SimpleBLESerialUart)
+                                                   SbpHalUARTReadCallback (SimpleBLESerialUart)
+                                                   SbpHalUARTWrite (SimpleBLESerialUart)
                                                    osalTimerUpdate (OSAL_Timers)
-                                                   sbpSerialAppCallback (SimpleBLESerialUart)
-                                                   sbpSerialAppWrite (SimpleBLESerialUart)
 
     -------------------------------------------------------------------------
   LIBRARY MODULE, NAME : ?UL_GE_X
@@ -27327,6 +27327,8 @@ RCODE
            ?L_ADD_TO_X             000015FC        LL_ENC_Decrypt (ll_enc)
                                                    LL_ENC_Encrypt (ll_enc)
                                                    SbpHalUARTRead (SimpleBLESerialUart)
+                                                   SbpHalUARTReadCallback (SimpleBLESerialUart)
+                                                   SbpHalUARTWrite (SimpleBLESerialUart)
                                                    gapIncSignCounter (gap_configmgr)
                                                    llAdjustForMissedEvent (ll_common)
                                                    llAdjustTimeBackward (ll_timer2)
@@ -27334,8 +27336,6 @@ RCODE
                                                    llSetupNextSlaveEvent (ll_slaveEndCauses)
                                                    osalTimeUpdate (OSAL_ClockBLE)
                                                    osalTimerUpdate (OSAL_Timers)
-                                                   sbpSerialAppCallback (SimpleBLESerialUart)
-                                                   sbpSerialAppWrite (SimpleBLESerialUart)
                                                    simpleProfileChangeCB (simpleBLEPeripheral)
 
     -------------------------------------------------------------------------
@@ -27422,6 +27422,8 @@ RCODE
                                                    RF_NormalIsr (ll_isr)
                                                    SM_VerifyAuthenSig (sm_mgr)
                                                    SbpHalUARTRead (SimpleBLESerialUart)
+                                                   SbpHalUARTReadCallback (SimpleBLESerialUart)
+                                                   SbpHalUARTWrite (SimpleBLESerialUart)
                                                    Segment part 98 (ll_timer2)
                                                    _ltoa (OSAL)
                                                    findOffset (osal_snv)
@@ -27450,8 +27452,6 @@ RCODE
                                                    osal_get_timeoutEx (OSAL_Timers)
                                                    osal_start_reload_timer (OSAL_Timers)
                                                    osal_start_timerEx (OSAL_Timers)
-                                                   sbpSerialAppCallback (SimpleBLESerialUart)
-                                                   sbpSerialAppWrite (SimpleBLESerialUart)
                                                    simpleProfileChangeCB (simpleBLEPeripheral)
                                                    smResponderSendNextKeyInfo (sm_rsppairing)
 
@@ -27467,6 +27467,7 @@ RCODE
            =====                   =======         ======
            ?L_MOV_TO_X             0000166C        GAPBondMgr_SetParameter (gapbondmgr)
                                                    LL_SetAdvControl (ll)
+                                                   SbpHalUARTWrite (SimpleBLESerialUart)
                                                    gapUpdateConnSignCounter (gap_configmgr)
                                                    llAdvEvt_TaskConnect (ll_advEndCauses)
                                                    llCalcTimerDrift (ll_timerDrift)
@@ -27479,7 +27480,6 @@ RCODE
                                                    osalAddTimer (OSAL_Timers)
                                                    osalTimerUpdate (OSAL_Timers)
                                                    osal_start_reload_timer (OSAL_Timers)
-                                                   sbpSerialAppWrite (SimpleBLESerialUart)
 
     -------------------------------------------------------------------------
   LIBRARY MODULE, NAME : ?XLOAD_R2345
@@ -27794,7 +27794,10 @@ RCODE
                                                    SM_GenerateAuthenSig (sm_mgr)
                                                    SM_ResolveRandomAddrs (sm_mgr)
                                                    SM_VerifyAuthenSig (sm_mgr)
+                                                   SbpHalUARTInit (SimpleBLESerialUart)
                                                    SbpHalUARTRead (SimpleBLESerialUart)
+                                                   SbpHalUARTReadCallback (SimpleBLESerialUart)
+                                                   SbpHalUARTWrite (SimpleBLESerialUart)
                                                    SimpleBLEPeripheral_Init (simpleBLEPeripheral)
                                                    SimpleBLEPeripheral_ProcessEvent (simpleBLEPeripheral)
                                                    _itoa (OnBoard)
@@ -27848,9 +27851,6 @@ RCODE
                                                    osalTimerUpdate (OSAL_Timers)
                                                    osal_snv_write (osal_snv)
                                                    peripheralStateNotificationCB (simpleBLEPeripheral)
-                                                   sbpSerialAppCallback (SimpleBLESerialUart)
-                                                   sbpSerialAppWrite (SimpleBLESerialUart)
-                                                   serialAppInitTransport (SimpleBLESerialUart)
                                                    setActivePage (osal_snv)
                                                    simpleBLEPeripheral_HandleKeys (simpleBLEPeripheral)
                                                    simpleProfileChangeCB (simpleBLEPeripheral)
@@ -27975,6 +27975,8 @@ RCODE
                                                    SM_PasskeyUpdate (sm_pairing)
                                                    SM_ResolveRandomAddrs (sm_mgr)
                                                    SM_VerifyAuthenSig (sm_mgr)
+                                                   SbpHalUARTInit (SimpleBLESerialUart)
+                                                   SbpHalUARTReadCallback (SimpleBLESerialUart)
                                                    Segment part 104 (gattservapp)
                                                    Segment part 121 (hci)
                                                    Segment part 144 (ll)
@@ -28104,10 +28106,8 @@ RCODE
                                                    osal_start_reload_timer (OSAL_Timers)
                                                    osal_start_timerEx (OSAL_Timers)
                                                    peripheralStateNotificationCB (simpleBLEPeripheral)
-                                                   sbpSerialAppCallback (SimpleBLESerialUart)
                                                    sendAuthEvent (gap_linkmgr)
                                                    sendEstLinkEvent (gap_linkmgr)
-                                                   serialAppInitTransport (SimpleBLESerialUart)
                                                    setActivePage (osal_snv)
                                                    simpleBLEPeripheralPairStateCB (simpleBLEPeripheral)
                                                    simpleBLEPeripheral_HandleKeys (simpleBLEPeripheral)
@@ -28258,6 +28258,7 @@ RCODE
                                                    SM_ResolveRandomAddrs (sm_mgr)
                                                    SM_StartPairing (sm_pairing)
                                                    SM_VerifyAuthenSig (sm_mgr)
+                                                   SbpHalUARTInit (SimpleBLESerialUart)
                                                    Segment part 49 (sm_mgr)
                                                    Segment part 51 (ll_timer2)
                                                    Segment part 88 (sm_pairing)
@@ -28335,7 +28336,6 @@ RCODE
                                                    peripheralStateNotificationCB (simpleBLEPeripheral)
                                                    sendAuthEvent (gap_linkmgr)
                                                    sendEstLinkEvent (gap_linkmgr)
-                                                   serialAppInitTransport (SimpleBLESerialUart)
                                                    simpleBLEPeripheral_HandleKeys (simpleBLEPeripheral)
                                                    simpleProfileChangeCB (simpleBLEPeripheral)
                                                    simpleProfile_ReadAttrCB (simpleGATTprofile)
@@ -28611,6 +28611,8 @@ RCODE
                                                    SM_StartPairing (sm_pairing)
                                                    SM_VerifyAuthenSig (sm_mgr)
                                                    SbpHalUARTRead (SimpleBLESerialUart)
+                                                   SbpHalUARTReadCallback (SimpleBLESerialUart)
+                                                   SbpHalUARTWrite (SimpleBLESerialUart)
                                                    Segment part 67 (att_util)
                                                    Segment part 81 (att_util)
                                                    Segment part 84 (att_util)
@@ -28821,8 +28823,6 @@ RCODE
                                                    peripheralStateNotificationCB (simpleBLEPeripheral)
                                                    phyFindWlEntry (phy)
                                                    reportStatusChange (linkdb)
-                                                   sbpSerialAppCallback (SimpleBLESerialUart)
-                                                   sbpSerialAppWrite (SimpleBLESerialUart)
                                                    sendAuthEvent (gap_linkmgr)
                                                    sendEstLinkEvent (gap_linkmgr)
                                                    sendTerminateEvent (gap_linkmgr)
@@ -29471,6 +29471,7 @@ RCODE
                                                    LL_ENC_GenerateMIC (ll_enc)
                                                    LL_ProcessEvent (ll)
                                                    LL_TxData (ll)
+                                                   SbpHalUARTReadCallback (SimpleBLESerialUart)
                                                    SimpleProfile_SetParameter (simpleGATTprofile)
                                                    gapBondMgrBondReq (gapbondmgr)
                                                    gapRole_ProcessGAPMsg (peripheral)
@@ -29481,7 +29482,6 @@ RCODE
                                                    llProcessPendingTxData (ll_common)
                                                    llSlaveEvt_TaskEndOk (ll_slaveEndCauses)
                                                    peripheralStateNotificationCB (simpleBLEPeripheral)
-                                                   sbpSerialAppCallback (SimpleBLESerialUart)
                                                    simpleBLEPeripheralPairStateCB (simpleBLEPeripheral)
                                                    simpleProfileChangeCB (simpleBLEPeripheral)
                                                    sm_c1 (sm_pairing)
@@ -29531,6 +29531,7 @@ RCODE
                                                    GATT_RegisterService (gatt_server)
                                                    LL_ProcessEvent (ll)
                                                    LL_TxData (ll)
+                                                   SbpHalUARTReadCallback (SimpleBLESerialUart)
                                                    gapBondMgr_SyncCharCfg (gapbondmgr)
                                                    gapProcessConnUpdateCompleteEvt (gap_linkmgr)
                                                    gapProcessConnectionCompleteEvt (gap_linkmgr)
@@ -29548,7 +29549,6 @@ RCODE
                                                    llProcessSlaveControlProcedures (ll_slaveEndCauses)
                                                    llSetNextDataChan (ll_common)
                                                    llSetupNextSlaveEvent (ll_slaveEndCauses)
-                                                   sbpSerialAppCallback (SimpleBLESerialUart)
                                                    smEndPairing (sm_pairing)
                                                    smProcessOSALMsg (sm_task)
     -------------------------------------------------------------------------

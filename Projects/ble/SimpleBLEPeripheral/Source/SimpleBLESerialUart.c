@@ -22,15 +22,15 @@ uint8 UartBuffer[SBP_UART_RX_BUF_SIZE];
 //static uint8 sendMsgTo_TaskID;
 
 /*该函数将会在任务函数的初始化函数中调用*/
-void SerialApp_Init(uint8 taskID) {
+void SbpHalUART_Init(uint8 taskID) {
 	//调用uart初始化代码
-	serialAppInitTransport();
+	SbpHalUARTInit();
 	//记录任务函数的taskID，备用
 	// sendMsgTo_TaskID = taskID;
 }
 
 /*uart初始化代码，配置串口的波特率、流控制等*/
-void serialAppInitTransport() {
+void SbpHalUARTInit() {
 	halUARTCfg_t uartConfig;
 
 	// configure UART
@@ -42,7 +42,7 @@ void serialAppInitTransport() {
 	uartConfig.tx.maxBufSize = SBP_UART_TX_BUF_SIZE; //uart发送缓冲区大小
 	uartConfig.idleTimeout = SBP_UART_IDLE_TIMEOUT;
 	uartConfig.intEnable = SBP_UART_INT_ENABLE; //是否开启中断
-	uartConfig.callBackFunc = sbpSerialAppCallback; //uart接收回调函数，在该函数中读取可用uart数据
+	uartConfig.callBackFunc = SbpHalUARTReadCallback; //uart接收回调函数，在该函数中读取可用uart数据
 
 	// start UART
 	// Note: Assumes no issue opening UART port.
@@ -65,7 +65,7 @@ uint16 i, point, irdatalen;
 uint8 pktBuffer[SBP_UART_RX_BUF_SIZE];
 uint8 UART_PORT_HAVE_READ = 0;
 
-void sbpSerialAppCallback(uint8 port, uint8 event) {
+void SbpHalUARTReadCallback(uint8 port, uint8 event) {
 	UART_PORT_HAVE_READ = 0;
 	UART_HAL_DELAY(35000);
 	numBytes = Hal_UART_RxBufLen(port);
@@ -96,7 +96,6 @@ void sbpSerialAppCallback(uint8 port, uint8 event) {
 		u_state = IR_DATA_SEND_END_RESP_STATE;
 	}
 
-
 	if (numBytes > 0 && UART_PORT_HAVE_READ == 0) {
 		SbpHalUARTRead(port, pktBuffer, numBytes);
 		HalLcdWriteStringValue("HAVE_READ", pktBuffer[0], 16, HAL_LCD_LINE_6);
@@ -109,7 +108,7 @@ void SbpHalUARTRead(uint8 port, uint8 *buf, uint16 len) {
 	UART_PORT_HAVE_READ = 1;
 }
 
-void sbpSerialAppWrite(uint8 *pBuffer, uint16 length) {
+void SbpHalUARTWrite(uint8 *pBuffer, uint16 length) {
 	UART_HAL_DELAY(1000);
 	HalUARTWrite(SBP_UART_PORT, pBuffer, length);
 }
