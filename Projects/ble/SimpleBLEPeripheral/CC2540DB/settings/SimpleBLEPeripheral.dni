@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=-1051596542
+Checksum=-148025308
 [DisAssemblyWindow]
 NumStates=_ 2
 State 1=_ 1
@@ -35,9 +35,10 @@ MixedMode=1
 [Breakpoints]
 Bp0=_ "STD_CODE" "{$PROJ_DIR$\..\Source\SimpleBLESerialUart.c}.114.1" 1 0 0 0 "" 0 ""
 Bp1=_ "STD_CODE" "{$PROJ_DIR$\..\Source\SimpleBLESerialUart.c}.114.3" 0 0 0 0 "" 0 ""
-Count=2
+Bp2=_ "STD_CODE" "{$PROJ_DIR$\..\Source\simpleBLEPeripheral.c}.553.3" 1 0 0 0 "" 0 ""
+Count=3
 [ChipconEmu]
-Stop timers on halt=1
+Stop timers on halt=0
 Leave target running=1
 [Log file]
 LoggingEnabled=_ 0

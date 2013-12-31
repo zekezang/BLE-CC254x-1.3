@@ -209,6 +209,7 @@ static void simpleBLEPeripheral_HandleKeys(uint8 shift, uint8 keys);
 static void simpleBLEPeripheralPairStateCB(uint16 connHandle, uint8 state, uint8 status);
 static char *bdAddr2Str(uint8 *pAddr);
 //static void updateDeviceName(char *name, uint8 len);
+static void sendIRData();
 /*********************************************************************
  * PROFILE CALLBACKS
  */
@@ -419,8 +420,6 @@ void SimpleBLEPeripheral_Init(uint8 task_id) {
 #endif // defined ( DC_DC_P0_7 )
 	// Setup a delayed profile startup
 	osal_set_event(simpleBLEPeripheral_TaskID, SBP_START_DEVICE_EVT);
-	//zekezang
-	//sendIRData(0xAB, 0x11, 0x22);
 }
 
 /*********************************************************************
@@ -485,6 +484,12 @@ uint16 SimpleBLEPeripheral_ProcessEvent(uint8 task_id, uint16 events) {
 		return (events ^ SBP_ZEKEZANG_EVT);
 	}
 
+	if (events & SBP_SEND_IRDATA_EVT) {
+		sendIRData();
+		HalLcdWriteString("send plan complete...", HAL_LCD_LINE_4);
+		return (events ^ SBP_SEND_IRDATA_EVT);
+	}
+
 #if defined ( PLUS_BROADCASTER )
 	if ( events & SBP_ADV_IN_CONNECTION_EVT )
 	{
@@ -519,12 +524,6 @@ static void simpleBLEPeripheral_ProcessOSALMsg(osal_event_hdr_t *pMsg) {
 	}
 }
 
-uint8 test[121] = { 0xE3, 0x78, 0x23, 0x75, 0x8C, 0xEC, 0x34, 0x5C, 0xC1, 0x51, 0x0F, 0x5E, 0x46, 0xFC, 0x6C, 0x4E, 0xF9, 0x43, 0x0E, 0x5E,
-		0x38, 0x09, 0x63, 0x4E, 0x04, 0xF5, 0x23, 0x11, 0x87, 0xAB, 0x78, 0x01, 0x05, 0xF6, 0x23, 0x11, 0x87, 0xAB, 0x78, 0x01, 0x05, 0xF6,
-		0x23, 0x11, 0x87, 0xAB, 0x78, 0x01, 0x05, 0xF6, 0x23, 0x11, 0x87, 0xAB, 0x78, 0x01, 0x05, 0xF6, 0x23, 0x11, 0x87, 0xAB, 0x78, 0x01,
-		0x05, 0xF6, 0x23, 0x11, 0x87, 0xAB, 0x79, 0x22, 0x17, 0x17, 0x45, 0x23, 0xA8, 0xBD, 0x8A, 0x12, 0x16, 0x17, 0x34, 0x33, 0xA9, 0xBD,
-		0x99, 0x12, 0x27, 0x18, 0x45, 0x33, 0x98, 0xBC, 0x8B, 0x02, 0x26, 0x08, 0x44, 0x33, 0x99, 0xCC, 0x8A, 0x13, 0x16, 0x07, 0x44, 0x22,
-		0xA9, 0xCD, 0x8A, 0x22, 0x16, 0x18, 0x45, 0x33, 0xA9, 0xBC, 0x89, 0x15, 0x32, };
 static void simpleBLEPeripheral_HandleKeys(uint8 shift, uint8 keys) {
 	if (keys & HAL_KEY_UP) {
 		u_state = IR_DATA_STUDY_CMD_START_BEGIN_STATE;
@@ -532,23 +531,30 @@ static void simpleBLEPeripheral_HandleKeys(uint8 shift, uint8 keys) {
 	}
 
 	if (keys & HAL_KEY_LEFT) {
+		sendIRData();
+	}
+
+	if (keys & HAL_KEY_DOWN) {
+		HalLcdWriteString("send after 3s...", HAL_LCD_LINE_4);
+		osal_start_timerEx(simpleBLEPeripheral_TaskID, SBP_SEND_IRDATA_EVT, 3000);
+	}
+
+	if (keys & HAL_KEY_RIGHT) {
+		HalLcdWriteString("send after 5s...", HAL_LCD_LINE_4);
+		osal_start_timerEx(simpleBLEPeripheral_TaskID, SBP_SEND_IRDATA_EVT, 5000);
+	}
+
+}
+
+static void sendIRData() {
+	if (u_state != IR_DATA_SEND_BEGIN_STATE) {
 		u_state = IR_DATA_SEND_BEGIN_STATE;
-//		uint8 k = 0;
-//		if (osal_snv_read(0xE0, 1, &k) == SUCCESS) {
-//			HalLcdWriteString("read ok", HAL_LCD_LINE_2);
-//		}
-//		uint8 bbb[255];
-//		osal_memset(bbb, 0, 255);
-//		if (osal_snv_read(0xE0, k, bbb) == SUCCESS) {
-//			HalLcdWriteString("read ok", HAL_LCD_LINE_2);
-//		}
 		uint8 kkkkk[255];
 		osal_memset(kkkkk, 0, 255);
 		kkkkk[0] = 0xE3;
 		osal_memcpy(kkkkk + 1, UartBuffer, 120);
 		SbpHalUARTWrite(kkkkk, 121);
 	}
-
 }
 
 /*********************************************************************

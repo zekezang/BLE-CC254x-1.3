@@ -8589,9 +8589,6 @@
     <file>
       <name>$PROJ_DIR$\..\Source\SimpleBLESerialUart.c</name>
     </file>
-    <file>
-      <name>$PROJ_DIR$\..\Source\SimpleBLESerialUart.h</name>
-    </file>
   </group>
   <group>
     <name>HAL</name>
@@ -8718,6 +8715,9 @@
         </group>
       </group>
     </group>
+    <file>
+      <name>$PROJ_DIR$\..\Source\SimpleBLESerialUart.h</name>
+    </file>
   </group>
   <group>
     <name>INCLUDE</name>
