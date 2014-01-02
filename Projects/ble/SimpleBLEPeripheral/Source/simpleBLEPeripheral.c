@@ -130,6 +130,10 @@
 #define ADV_IN_CONN_WAIT                    500 // delay 500 ms
 #endif
 
+
+// GAP connection handle
+static uint16 gapConnHandle;
+
 extern uint8 SBP_UART_STUDY_CMD;
 extern uint8 SBP_UART_STUDY_CMD_LEN;
 
@@ -606,6 +610,8 @@ static void peripheralStateNotificationCB(gaprole_States_t newState) {
 
 	case GAPROLE_CONNECTED: {
 		HalLcdWriteString("Connected", HAL_LCD_LINE_3);
+		//simpleProfile_StateNotify( uint16 connHandle, attHandleValueNoti_t *pNoti )
+		GAPRole_GetParameter(GAPROLE_CONNHANDLE, &gapConnHandle);
 	}
 		break;
 

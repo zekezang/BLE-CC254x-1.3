@@ -22,7 +22,7 @@
   its documentation for any purpose.
 
   YOU FURTHER ACKNOWLEDGE AND AGREE THAT THE SOFTWARE AND DOCUMENTATION ARE
-  PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, 
+  PROVIDED ï¿½AS ISï¿½ WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, 
   INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF MERCHANTABILITY, TITLE, 
   NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL
   TEXAS INSTRUMENTS OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER CONTRACT,
@@ -145,6 +145,20 @@ extern bStatus_t SimpleProfile_SetParameter( uint8 param, uint8 len, void *value
  *          uint16 pointer).
  */
 extern bStatus_t SimpleProfile_GetParameter( uint8 param, void *value );
+
+
+/*********************************************************************
+ * @fn          simpleProfile_StateNotify
+ *
+ * @brief       Send a notification containing a rate
+ *              measurement.
+ *
+ * @param       connHandle - connection handle
+ * @param       pNoti - pointer to notification structure
+ *
+ * @return      Success or Failure
+ */
+extern bStatus_t simpleProfile_StateNotify( uint16 connHandle, attHandleValueNoti_t *pNoti );
 
 
 /*********************************************************************

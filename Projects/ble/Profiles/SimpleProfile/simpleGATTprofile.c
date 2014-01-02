@@ -391,6 +391,35 @@ bStatus_t SimpleProfile_GetParameter(uint8 param, void *value) {
 	return (ret);
 }
 
+
+/*********************************************************************
+ * @fn          simpleProfile_StateNotify
+ *
+ * @brief       Send a notification containing a rate
+ *              measurement.
+ *
+ * @param       connHandle - connection handle
+ * @param       pNoti - pointer to notification structure
+ *
+ * @return      Success or Failure
+ */
+bStatus_t simpleProfile_StateNotify( uint16 connHandle, attHandleValueNoti_t *pNoti )
+{
+  uint16 value = GATTServApp_ReadCharCfg( connHandle, simpleProfileChar4Config );
+
+  // If notifications enabled
+  if ( value & GATT_CLIENT_CFG_NOTIFY )
+  {
+    // Set the handle
+    pNoti->handle = simpleProfileAttrTbl[12].handle;
+
+    // Send the notification
+    return GATT_Notification( connHandle, pNoti, FALSE );
+  }
+
+  return bleIncorrectMode;
+}
+
 /*********************************************************************
  * @fn          simpleProfile_ReadAttrCB
  *
