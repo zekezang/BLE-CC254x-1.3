@@ -709,6 +709,7 @@ static void simpleProfileChangeCB(uint8 paramID) {
 		if ((newValueBuf[0] == TRANSFER_DATA_SIGN) && (newValueBuf[1] != 0) && (!TRANSFER_DATA_STATE_IN)) {
 			data_len = newValueBuf[1];
 			TRANSFER_DATA_STATE_IN = TRUE;
+			data_len_index = 0;
 			osal_memset(recv_value, 0, data_len);
 		}
 
@@ -724,15 +725,10 @@ static void simpleProfileChangeCB(uint8 paramID) {
 		if (data_len_index == data_len) {
 			TRANSFER_DATA_STATE_IN = FALSE;
 			HalLcdWriteStringValue("data_len:", osal_strlen(recv_value), 10, HAL_LCD_LINE_6);
+
+			data_len_index = 0;
 			osal_memset(recv_value, 0, data_len);
 		}
-
-//		if(osal_memcmp(newValueBuf, val, 5)){
-//			k++;
-//		}
-//		if(k==100){
-//			HalLcdWriteStringValue( "recv counter:", k, 10, HAL_LCD_LINE_2 );
-//		}
 
 		break;
 	case SIMPLEPROFILE_CHAR3:
