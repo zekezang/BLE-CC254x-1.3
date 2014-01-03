@@ -98,7 +98,7 @@
 <L><invalid loc>:100:9: macro definition=OSAL_CBTIMER_NUM_TASKS <US>c:macro@OSAL_CBTIMER_NUM_TASKS<UE> <DS>OSAL_CBTIMER_NUM_TASKS<DE> Extent=<ES>100:9 - 100:33<EE>
 <L><invalid loc>:101:9: macro definition=HAL_AES_DMA <US>c:macro@HAL_AES_DMA<UE> <DS>HAL_AES_DMA<DE> Extent=<ES>101:9 - 101:25<EE>
 <L><invalid loc>:102:9: macro definition=HAL_DMA <US>c:macro@HAL_DMA<UE> <DS>HAL_DMA<DE> Extent=<ES>102:9 - 102:21<EE>
-<L><invalid loc>:103:9: macro definition=xPOWER_SAVING <US>c:macro@xPOWER_SAVING<UE> <DS>xPOWER_SAVING<DE> Extent=<ES>103:9 - 103:24<EE>
+<L><invalid loc>:103:9: macro definition=POWER_SAVING <US>c:macro@POWER_SAVING<UE> <DS>POWER_SAVING<DE> Extent=<ES>103:9 - 103:23<EE>
 <L><invalid loc>:104:9: macro definition=HAL_LCD <US>c:macro@HAL_LCD<UE> <DS>HAL_LCD<DE> Extent=<ES>104:9 - 104:21<EE>
 <L><invalid loc>:105:9: macro definition=HAL_LED <US>c:macro@HAL_LED<UE> <DS>HAL_LED<DE> Extent=<ES>105:9 - 105:21<EE>
 <L><invalid loc>:106:9: macro definition=HAL_UART <US>c:macro@HAL_UART<UE> <DS>HAL_UART<DE> Extent=<ES>106:9 - 106:22<EE>
@@ -439,7 +439,7 @@
 <L><invalid loc>:443:9: macro definition=OSAL_CBTIMER_NUM_TASKS <US>c:macro@OSAL_CBTIMER_NUM_TASKS<UE> <DS>OSAL_CBTIMER_NUM_TASKS<DE> Extent=<ES>443:9 - 443:33<EE>
 <L><invalid loc>:444:9: macro definition=HAL_AES_DMA <US>c:macro@HAL_AES_DMA<UE> <DS>HAL_AES_DMA<DE> Extent=<ES>444:9 - 444:25<EE>
 <L><invalid loc>:445:9: macro definition=HAL_DMA <US>c:macro@HAL_DMA<UE> <DS>HAL_DMA<DE> Extent=<ES>445:9 - 445:21<EE>
-<L><invalid loc>:446:9: macro definition=xPOWER_SAVING <US>c:macro@xPOWER_SAVING<UE> <DS>xPOWER_SAVING<DE> Extent=<ES>446:9 - 446:24<EE>
+<L><invalid loc>:446:9: macro definition=POWER_SAVING <US>c:macro@POWER_SAVING<UE> <DS>POWER_SAVING<DE> Extent=<ES>446:9 - 446:23<EE>
 <L><invalid loc>:447:9: macro definition=HAL_LCD <US>c:macro@HAL_LCD<UE> <DS>HAL_LCD<DE> Extent=<ES>447:9 - 447:21<EE>
 <L><invalid loc>:448:9: macro definition=HAL_LED <US>c:macro@HAL_LED<UE> <DS>HAL_LED<DE> Extent=<ES>448:9 - 448:21<EE>
 <L><invalid loc>:449:9: macro definition=HAL_UART <US>c:macro@HAL_UART<UE> <DS>HAL_UART<DE> Extent=<ES>449:9 - 449:22<EE>
@@ -928,8 +928,9 @@
 <L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_mcu.h:179:9: macro definition=CLKCONCMD_32MHZ <US>c:macro@CLKCONCMD_32MHZ<UE> <DS>CLKCONCMD_32MHZ<DE> Extent=<ES>179:9 - 179:29<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_mcu.h:180:9: macro definition=CLKCONCMD_16MHZ <US>c:macro@CLKCONCMD_16MHZ<UE> <DS>CLKCONCMD_16MHZ<DE> Extent=<ES>180:9 - 180:56<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_mcu.h:183:9: macro definition=LDRDY <US>c:macro@LDRDY<UE> <DS>LDRDY<DE> Extent=<ES>183:9 - 183:31<EE>
-<L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_mcu.h:196:11: macro definition=CLEAR_SLEEP_MODE <US>c:macro@CLEAR_SLEEP_MODE<UE> <DS>CLEAR_SLEEP_MODE<DE> Extent=<ES>196:11 - 196:27<EE>
-<L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_mcu.h:197:11: macro definition=ALLOW_SLEEP_MODE <US>c:macro@ALLOW_SLEEP_MODE<UE> <DS>ALLOW_SLEEP_MODE<DE> Extent=<ES>197:11 - 197:27<EE>
+<L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_mcu.h:188:17: macro expansion=__data|<invalid loc>:24:9 <US>c:macro@__data<UE> <DS>__data<DE> Extent=<ES>188:17 - 188:23<EE>
+<L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_mcu.h:193:9: macro definition=CLEAR_SLEEP_MODE <US>c:macro@CLEAR_SLEEP_MODE<UE> <DS>CLEAR_SLEEP_MODE<DE> Extent=<ES>193:9 - 193:63<EE>
+<L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_mcu.h:194:9: macro definition=ALLOW_SLEEP_MODE <US>c:macro@ALLOW_SLEEP_MODE<UE> <DS>ALLOW_SLEEP_MODE<DE> Extent=<ES>194:9 - 194:71<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_board_cfg.h:56:1: inclusion directive=hal_defs.h <US><UE> <DS><DE> <IS>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\include\hal_defs.h<IE>  [multi-include guarded] Extent=<ES>56:1 - 56:22<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_board_cfg.h:57:1: inclusion directive=hal_types.h <US><UE> <DS><DE> <IS>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_types.h<IE>  [multi-include guarded] Extent=<ES>57:1 - 57:23<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_board_cfg.h:62:11: macro definition=HAL_BOARD_CC2530EB_REV17 <US>c:macro@HAL_BOARD_CC2530EB_REV17<UE> <DS>HAL_BOARD_CC2530EB_REV17<DE> Extent=<ES>62:11 - 62:35<EE>
@@ -1146,6 +1147,9 @@
 <L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\include\hal_drivers.h:58:9: macro definition=PERIOD_RSSI_RESET_EVT <US>c:macro@PERIOD_RSSI_RESET_EVT<UE> <DS>PERIOD_RSSI_RESET_EVT<DE> Extent=<ES>58:9 - 58:51<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\include\hal_drivers.h:59:9: macro definition=HAL_LED_BLINK_EVENT <US>c:macro@HAL_LED_BLINK_EVENT<UE> <DS>HAL_LED_BLINK_EVENT<DE> Extent=<ES>59:9 - 59:51<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\include\hal_drivers.h:60:9: macro definition=HAL_KEY_EVENT <US>c:macro@HAL_KEY_EVENT<UE> <DS>HAL_KEY_EVENT<DE> Extent=<ES>60:9 - 60:51<EE>
+<L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\include\hal_drivers.h:63:9: macro definition=HAL_SLEEP_TIMER_EVENT <US>c:macro@HAL_SLEEP_TIMER_EVENT<UE> <DS>HAL_SLEEP_TIMER_EVENT<DE> Extent=<ES>63:9 - 63:51<EE>
+<L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\include\hal_drivers.h:64:9: macro definition=HAL_PWRMGR_HOLD_EVENT <US>c:macro@HAL_PWRMGR_HOLD_EVENT<UE> <DS>HAL_PWRMGR_HOLD_EVENT<DE> Extent=<ES>64:9 - 64:51<EE>
+<L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\include\hal_drivers.h:65:9: macro definition=HAL_PWRMGR_CONSERVE_EVENT <US>c:macro@HAL_PWRMGR_CONSERVE_EVENT<UE> <DS>HAL_PWRMGR_CONSERVE_EVENT<DE> Extent=<ES>65:9 - 65:51<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\include\hal_drivers.h:68:9: macro definition=HAL_PWRMGR_CONSERVE_DELAY <US>c:macro@HAL_PWRMGR_CONSERVE_DELAY<UE> <DS>HAL_PWRMGR_CONSERVE_DELAY<DE> Extent=<ES>68:9 - 68:47<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\include\hal_drivers.h:69:9: macro definition=PERIOD_RSSI_RESET_TIMEOUT <US>c:macro@PERIOD_RSSI_RESET_TIMEOUT<UE> <DS>PERIOD_RSSI_RESET_TIMEOUT<DE> Extent=<ES>69:9 - 69:47<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Projects\ble\SimpleBLEPeripheral\Source\SimpleBLEPeripheral_Main.c:48:1: inclusion directive=hal_led.h <US><UE> <DS><DE> <IS>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\include\hal_led.h<IE>  [multi-include guarded] Extent=<ES>48:1 - 48:21<EE>
@@ -1314,6 +1318,7 @@
 <L>D:\ble_workspace\BLE-CC254x-1.3\Projects\ble\SimpleBLEPeripheral\Source\SimpleBLEPeripheral_Main.c:80:14: macro expansion=OB_COLD|D:\ble_workspace\BLE-CC254x-1.3\Projects\ble\common\cc2540\OnBoard.h:68:9 <US>c:macro@OB_COLD<UE> <DS>OB_COLD<DE> Extent=<ES>80:14 - 80:21<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Projects\ble\SimpleBLEPeripheral\Source\SimpleBLEPeripheral_Main.c:94:3: macro expansion=HAL_ENABLE_INTERRUPTS|D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_mcu.h:110:9 <US>c:macro@HAL_ENABLE_INTERRUPTS<UE> <DS>HAL_ENABLE_INTERRUPTS<DE> Extent=<ES>94:3 - 94:26<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Projects\ble\SimpleBLEPeripheral\Source\SimpleBLEPeripheral_Main.c:97:14: macro expansion=OB_READY|D:\ble_workspace\BLE-CC254x-1.3\Projects\ble\common\cc2540\OnBoard.h:70:9 <US>c:macro@OB_READY<UE> <DS>OB_READY<DE> Extent=<ES>97:14 - 97:22<EE>
+<L>D:\ble_workspace\BLE-CC254x-1.3\Projects\ble\SimpleBLEPeripheral\Source\SimpleBLEPeripheral_Main.c:100:25: macro expansion=PWRMGR_BATTERY|D:\ble_workspace\BLE-CC254x-1.3\Components\osal\include\OSAL_PwrMgr.h:76:9 <US>c:macro@PWRMGR_BATTERY<UE> <DS>PWRMGR_BATTERY<DE> Extent=<ES>100:25 - 100:39<EE>
 <L><invalid loc>:2:15: TypedefDecl=__builtin_va_list|<invalid loc>:2:15 (Definition) <US><UE> <DS>char *<DE> Extent=<ES>2:1 - 2:32<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_types.h:56:25: TypedefDecl=int8|D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_types.h:56:25 (Definition) <US>c:hal_types.h@2683@T@int8<UE> <DS>signed char<DE> Extent=<ES>56:1 - 56:29<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_types.h:57:25: TypedefDecl=uint8|D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_types.h:57:25 (Definition) <US>c:hal_types.h@2744@T@uint8<UE> <DS>unsigned char<DE> Extent=<ES>57:1 - 57:30<EE>
@@ -1575,6 +1580,8 @@
 <L>C:\Program Files\IAR Systems\Embedded Workbench 6.4\8051\inc\ioCC2540.h:281:1: VarDecl=P1DIR|C:\Program Files\IAR Systems\Embedded Workbench 6.4\8051\inc\ioCC2540.h:281:1 (Declaration) <US>c:@P1DIR<UE> <DS>P1DIR<DE> Extent=<ES>281:1 - 281:27<EE>
 <L>C:\Program Files\IAR Systems\Embedded Workbench 6.4\8051\inc\ioCC2540.h:282:1: VarDecl=P2DIR|C:\Program Files\IAR Systems\Embedded Workbench 6.4\8051\inc\ioCC2540.h:282:1 (Declaration) <US>c:@P2DIR<UE> <DS>P2DIR<DE> Extent=<ES>282:1 - 282:27<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_mcu.h:114:23: TypedefDecl=halIntState_t|D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_mcu.h:114:23 (Definition) <US>c:hal_mcu.h@5052@T@halIntState_t<UE> <DS>unsigned char<DE> Extent=<ES>114:1 - 114:36<EE>
+<L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_mcu.h:188:30: VarDecl=halSleepPconValue|D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_mcu.h:188:30 (Declaration) <US>c:@halSleepPconValue<UE> <DS>halSleepPconValue<DE> Extent=<ES>188:1 - 188:47<EE>
+<L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_mcu.h:188:24: TypeRef=uint8|D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_types.h:57:25 (Reference) <US>c:hal_types.h@2744@T@uint8<UE> <DS>unsigned char<DE> Extent=<ES>188:24 - 188:29<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\include\hal_key.h:95:16: TypedefDecl=halKeyCBack_t|D:\ble_workspace\BLE-CC254x-1.3\Components\hal\include\hal_key.h:95:16 (Definition) <US>c:hal_key.h@4578@T@halKeyCBack_t<UE> <DS>void (*)(uint8, uint8)<DE> Extent=<ES>95:1 - 95:56<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\include\hal_key.h:95:38: ParmDecl=keys|D:\ble_workspace\BLE-CC254x-1.3\Components\hal\include\hal_key.h:95:38 (Definition) <US>c:@keys<UE> <DS>uint8<DE> Extent=<ES>95:32 - 95:42<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Components\hal\include\hal_key.h:95:32: TypeRef=uint8|D:\ble_workspace\BLE-CC254x-1.3\Components\hal\target\CC2540EB\hal_types.h:57:25 (Reference) <US>c:hal_types.h@2744@T@uint8<UE> <DS>unsigned char<DE> Extent=<ES>95:32 - 95:37<EE>
@@ -2068,5 +2075,7 @@
 <L>D:\ble_workspace\BLE-CC254x-1.3\Projects\ble\SimpleBLEPeripheral\Source\SimpleBLEPeripheral_Main.c:94:3: DeclRefExpr=|C:\Program Files\IAR Systems\Embedded Workbench 6.4\8051\inc\ioCC2540.h:178:1 (Reference) <US><UE> <DS><DE> Extent=<ES>94:3 - 94:26<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Projects\ble\SimpleBLEPeripheral\Source\SimpleBLEPeripheral_Main.c:97:3: CallExpr=InitBoard|D:\ble_workspace\BLE-CC254x-1.3\Projects\ble\common\cc2540\OnBoard.h:158:13 (Reference) <US>c:@F@InitBoard<UE> <DS>void InitBoard(uint8)<DE> Extent=<ES>97:3 - 97:24<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Projects\ble\SimpleBLEPeripheral\Source\SimpleBLEPeripheral_Main.c:97:3: DeclRefExpr=InitBoard|D:\ble_workspace\BLE-CC254x-1.3\Projects\ble\common\cc2540\OnBoard.h:158:13 (Reference) <US>c:@F@InitBoard<UE> <DS>void InitBoard(uint8)<DE> Extent=<ES>97:3 - 97:12<EE>
+<L>D:\ble_workspace\BLE-CC254x-1.3\Projects\ble\SimpleBLEPeripheral\Source\SimpleBLEPeripheral_Main.c:100:5: CallExpr=osal_pwrmgr_device|D:\ble_workspace\BLE-CC254x-1.3\Components\osal\include\OSAL_PwrMgr.h:124:15 (Reference) <US>c:@F@osal_pwrmgr_device<UE> <DS>void osal_pwrmgr_device(uint8)<DE> Extent=<ES>100:5 - 100:41<EE>
+<L>D:\ble_workspace\BLE-CC254x-1.3\Projects\ble\SimpleBLEPeripheral\Source\SimpleBLEPeripheral_Main.c:100:5: DeclRefExpr=osal_pwrmgr_device|D:\ble_workspace\BLE-CC254x-1.3\Components\osal\include\OSAL_PwrMgr.h:124:15 (Reference) <US>c:@F@osal_pwrmgr_device<UE> <DS>void osal_pwrmgr_device(uint8)<DE> Extent=<ES>100:5 - 100:23<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Projects\ble\SimpleBLEPeripheral\Source\SimpleBLEPeripheral_Main.c:104:3: CallExpr=osal_start_system|D:\ble_workspace\BLE-CC254x-1.3\Components\osal\include\OSAL.h:218:15 (Reference) <US>c:@F@osal_start_system<UE> <DS>void osal_start_system(void)<DE> Extent=<ES>104:3 - 104:22<EE>
 <L>D:\ble_workspace\BLE-CC254x-1.3\Projects\ble\SimpleBLEPeripheral\Source\SimpleBLEPeripheral_Main.c:104:3: DeclRefExpr=osal_start_system|D:\ble_workspace\BLE-CC254x-1.3\Components\osal\include\OSAL.h:218:15 (Reference) <US>c:@F@osal_start_system<UE> <DS>void osal_start_system(void)<DE> Extent=<ES>104:3 - 104:20<EE>

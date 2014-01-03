@@ -396,37 +396,49 @@ uint8 sbpGattWriteString(uint8 *pBuffer, uint16 length) {
 	return status;
 }
 
-static unsigned char val[4] = { 0x61, 0x62, 0x63, 0x64 };
+static unsigned char val[10] = { 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6A};
 static uint8 *send_val;
+static uint8 kk = 0;
 static void simpleBLECentral_sendABC() {
 	uint8 status;
+//
+//	if (val[0] > 0x75) {
+//		val[0] = 0x61;
+//		val[1] = 0x62;
+//		val[2] = 0x63;
+//		val[3] = 0x64;
+//		val[4] = 0x65;
+//	} else {
+//		val[0] += 1;
+//		val[1] += 1;
+//		val[2] += 1;
+//		val[3] += 1;
+//		val[4] += 1;
+//	}
 
-	if (val[0] > 0x75) {
-		val[0] = 0x61;
-		val[1] = 0x62;
-		val[2] = 0x63;
-		val[3] = 0x64;
-	} else {
-		val[0] += 1;
-		val[1] += 1;
-		val[2] += 1;
-		val[3] += 1;
+//	send_val = osal_msg_allocate(20);
+//	osal_memset(send_val, 0, 20);
+//	osal_memcpy(send_val, "send value: ", 12);
+//	osal_memcpy(send_val + 12, val, 5);
+//	//HalLcdWriteString((char*) send_val, HAL_LCD_LINE_3);
+//	osal_msg_deallocate(send_val);
+
+	if(kk ==0){
+		char vall[10] = { 0xFE, 0xA0, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6A};
+		status = sbpGattWriteString(vall, 10);
+	}else{
+		status = sbpGattWriteString(val, 10);
 	}
-
-	send_val = osal_msg_allocate(20);
-	osal_memset(send_val, 0, 20);
-	osal_memcpy(send_val, "send value: ", 12);
-	osal_memcpy(send_val + 12, val, 4);
-	HalLcdWriteString((char*) send_val, HAL_LCD_LINE_3);
-	osal_msg_deallocate(send_val);
-
-	status = sbpGattWriteString(val, 4);
 
 	if (status == SUCCESS) {
 		simpleBLEProcedureInProgress = TRUE;
 		simpleBLEDoWrite = !simpleBLEDoWrite;
 	}
-	osal_start_timerEx(simpleBLETaskId, SBP_ZEKEZANG_EVT, 1000);
+	kk++;
+	if(kk<16){
+		osal_start_timerEx(simpleBLETaskId, SBP_ZEKEZANG_EVT, 300);
+	}
+
 }
 
 /*********************************************************************
@@ -584,8 +596,9 @@ static void simpleBLECentralProcessGATTMsg(gattMsgEvent_t *pMsg) {
 
 		simpleBLEProcedureInProgress = FALSE;
 
-	} else if (pMsg->method == ATT_EXECUTE_WRITE_RSP) {
-		LCD_WRITE_STRING_VALUE( "send counter:", simpleBLECharVal++, 10, HAL_LCD_LINE_2);
+	}
+	else if (pMsg->method == ATT_EXECUTE_WRITE_RSP) {
+		//LCD_WRITE_STRING_VALUE( "send counter:", simpleBLECharVal++, 10, HAL_LCD_LINE_2);
 		simpleBLEProcedureInProgress = FALSE;
 	} else if (simpleBLEDiscState != BLE_DISC_STATE_IDLE) {
 		simpleBLEGATTDiscoveryEvent(pMsg);
@@ -752,7 +765,7 @@ static void simpleBLECentralPasscodeCB(uint8 *deviceAddr, uint16 connectionHandl
 	LCD_WRITE_STRING( "Passcode CB", HAL_LCD_LINE_4);
 
 	// Send passcode response//应答从机的密码
-	GAPBondMgr_PasscodeRsp(connectionHandle, SUCCESS, 12345);
+	GAPBondMgr_PasscodeRsp(connectionHandle, SUCCESS, 1234);
 }
 
 /*********************************************************************

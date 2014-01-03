@@ -130,7 +130,6 @@
 #define ADV_IN_CONN_WAIT                    500 // delay 500 ms
 #endif
 
-
 // GAP connection handle
 static uint16 gapConnHandle;
 
@@ -139,6 +138,15 @@ extern uint8 SBP_UART_STUDY_CMD_LEN;
 
 extern UartState u_state;
 extern uint8 UartBuffer[SBP_UART_RX_BUF_SIZE];
+
+/*************************************************************
+ *  recv data define
+ */
+#define TRANSFER_DATA_SIGN 0xFE
+static uint8 recv_value[254] = { 0 };
+static uint8 TRANSFER_DATA_STATE_IN = FALSE;
+static char newValueBuf[20] = { 0 };
+static uint8 data_len = 0, cur_data_len = 0, data_len_index = 0;
 
 /*********************************************************************
  * TYPEDEFS
@@ -544,8 +552,11 @@ static void simpleBLEPeripheral_HandleKeys(uint8 shift, uint8 keys) {
 	}
 
 	if (keys & HAL_KEY_RIGHT) {
-		HalLcdWriteString("send after 5s...", HAL_LCD_LINE_4);
-		osal_start_timerEx(simpleBLEPeripheral_TaskID, SBP_SEND_IRDATA_EVT, 5000);
+//		HalLcdWriteString("send after 5s...", HAL_LCD_LINE_4);
+//		osal_start_timerEx(simpleBLEPeripheral_TaskID, SBP_SEND_IRDATA_EVT, 5000);
+//		uint8 initial_advertising_enable = FALSE;
+//		GAPRole_SetParameter(GAPROLE_ADVERT_ENABLED, sizeof(uint8), &initial_advertising_enable);
+		HalLcdWriteStringValue("data_len:", data_len, 10, HAL_LCD_LINE_2);
 	}
 
 }
@@ -687,66 +698,46 @@ static void performPeriodicTask(void) {
  *
  * @return  none
  */
-static uint32 k = 0;
-static uint8 *send_val;
-uint8 *uart_s;
+
 static void simpleProfileChangeCB(uint8 paramID) {
-	uint8 newValue;
-	uint8 newValueBuf[20] = { 0 };
+	UART_HAL_DELAY(1000);
+	osal_memset(newValueBuf, 0, 20);
 	switch (paramID) {
 	case SIMPLEPROFILE_CHAR1:
-		//SimpleProfile_GetParameter( SIMPLEPROFILE_CHAR1, &newValue );
 		SimpleProfile_GetParameter(SIMPLEPROFILE_CHAR1, newValueBuf);
-#if (defined HAL_LCD) && (HAL_LCD == TRUE)
-		//HalLcdWriteStringValue( "Char 1:", (uint16)(newValue), 10,  HAL_LCD_LINE_3 );
-		k++;
 
-		uart_s = osal_msg_allocate(5);
-		osal_memset(uart_s, 0, 5);
-		*(uart_s) = 0x05;
-		osal_memcpy(uart_s+1,newValueBuf, 4);
-		SbpHalUARTWrite(uart_s, 5);
-		osal_msg_deallocate(uart_s);
+		if ((newValueBuf[0] == TRANSFER_DATA_SIGN) && (newValueBuf[1] != 0) && (!TRANSFER_DATA_STATE_IN)) {
+			data_len = newValueBuf[1];
+			TRANSFER_DATA_STATE_IN = TRUE;
+			osal_memset(recv_value, 0, data_len);
+		}
 
-		HalLcdWriteStringValue( "recv counter:", k, 10, HAL_LCD_LINE_2 );
+		cur_data_len = osal_strlen(newValueBuf);
 
-		send_val = osal_msg_allocate(20);
-		osal_memset(send_val, 0, 20);
-		osal_memcpy(send_val, "rv:", 3);
-		osal_memcpy(send_val + 3, newValueBuf, 4);
-		HalLcdWriteString((char*) send_val, HAL_LCD_LINE_3);
-		osal_msg_deallocate(send_val);
+		if (TRANSFER_DATA_STATE_IN) {
+			osal_memcpy((recv_value + data_len_index), newValueBuf, cur_data_len);
+			data_len_index += cur_data_len;
+		}
 
-//		if(k%4 == 0) {
-//			HalLedSet(HAL_LED_ALL, HAL_LED_MODE_OFF);
-//			HalLedSet(HAL_LED_4, HAL_LED_MODE_ON);
-//		} else if(k%4 == 1) {
-//			HalLedSet(HAL_LED_ALL, HAL_LED_MODE_OFF);
-//			HalLedSet(HAL_LED_1, HAL_LED_MODE_ON);
-//		} else if(k%4 == 2) {
-//			HalLedSet(HAL_LED_ALL, HAL_LED_MODE_OFF);
-//			HalLedSet(HAL_LED_2, HAL_LED_MODE_ON);
-//		} else if(k%4 == 3) {
-//			HalLedSet(HAL_LED_ALL, HAL_LED_MODE_OFF);
-//			HalLedSet(HAL_LED_3, HAL_LED_MODE_ON);
+		HalLcdWriteStringValue("data_len_index:", data_len_index, 10, HAL_LCD_LINE_7);
+
+		if (data_len_index == data_len) {
+			TRANSFER_DATA_STATE_IN = FALSE;
+			HalLcdWriteStringValue("data_len:", osal_strlen(recv_value), 10, HAL_LCD_LINE_6);
+			osal_memset(recv_value, 0, data_len);
+		}
+
+//		if(osal_memcmp(newValueBuf, val, 5)){
+//			k++;
+//		}
+//		if(k==100){
+//			HalLcdWriteStringValue( "recv counter:", k, 10, HAL_LCD_LINE_2 );
 //		}
 
-//		if(osal_memcmp(newValueBuf, "abcd", 4)){
-//			HalLcdWriteString("compare ok", HAL_LCD_LINE_5);
-//			HalLedSet(HAL_LED_2, HAL_LED_MODE_ON);
-//		}
-
-#endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
 		break;
-
 	case SIMPLEPROFILE_CHAR3:
-		SimpleProfile_GetParameter(SIMPLEPROFILE_CHAR3, &newValue);
-
-#if (defined HAL_LCD) && (HAL_LCD == TRUE)
-		HalLcdWriteStringValue( "Char 3:", (uint16)(newValue), 10, HAL_LCD_LINE_3 );
-#endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
+		//SimpleProfile_GetParameter(SIMPLEPROFILE_CHAR3, &newValue);
 		break;
-
 	default:
 		// should not reach here!
 		break;
