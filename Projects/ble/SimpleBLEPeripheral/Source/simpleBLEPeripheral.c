@@ -206,6 +206,13 @@ static uint8 advertData[] = {
 
 };
 
+uint8 kkkkk[254] = { 0xE3, 0x78, 0x23, 0x74, 0x8C, 0xEF, 0x47, 0x62, 0x9B, 0x5C, 0x13, 0x5E, 0x78, 0xFC, 0x7A, 0x4F, 0x07, 0x44, 0x00, 0x5E,
+		0x37, 0x11, 0x67, 0x4E, 0x04, 0xF5, 0x23, 0x12, 0x89, 0xAE, 0x7C, 0x06, 0x0B, 0xFD, 0x2B, 0x1A, 0x91, 0xB6, 0x84, 0x0E, 0x13, 0x05,
+		0x33, 0x22, 0x99, 0xBE, 0x8C, 0x16, 0x1B, 0x0D, 0x3B, 0x2A, 0xA1, 0xC6, 0x94, 0x1E, 0x23, 0x15, 0x43, 0x32, 0xA9, 0xCE, 0x9C, 0x26,
+		0x2B, 0x1D, 0x4B, 0x3A, 0xB1, 0xD6, 0x79, 0x12, 0x16, 0x07, 0x35, 0x33, 0xA9, 0xCD, 0x99, 0x12, 0x16, 0x07, 0x35, 0x33, 0xA9, 0xCD,
+		0x99, 0x12, 0x16, 0x07, 0x35, 0x33, 0xA9, 0xCD, 0x99, 0x22, 0x27, 0x18, 0x35, 0x23, 0x98, 0xBC, 0x99, 0x13, 0x26, 0x07, 0x45, 0x32,
+		0x99, 0xCD, 0x8A, 0x13, 0x17, 0x08, 0x44, 0x32, 0xA8, 0xCC, 0x8B, 0x50, 0x80 };
+
 // GAP GATT Attributes
 static uint8 attDeviceName[GAP_DEVICE_NAME_LEN] = "zekezang";
 
@@ -412,16 +419,13 @@ void SimpleBLEPeripheral_Init(uint8 task_id) {
 		SimpleProfile_SetParameter(SIMPLEPROFILE_CHAR5, SIMPLEPROFILE_CHAR5_LEN, charValue5);
 	}
 
-#if (defined HAL_LCD) && (HAL_LCD == TRUE)
-	HalLcdWriteString( "BLE slave zekezang", HAL_LCD_LINE_1 );
-#endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
+	HalLcdWriteString("BLE slave zekezang", HAL_LCD_LINE_1);
+
 	// Register callback with SimpleGATTprofile
 	VOID SimpleProfile_RegisterAppCBs(&simpleBLEPeripheral_SimpleProfileCBs);
 
-	// Enable clock divide on halt
-	// This reduces active current while radio is active and CC254x MCU
-	// is halted
-	HCI_EXT_ClkDivOnHaltCmd(HCI_EXT_ENABLE_CLK_DIVIDE_ON_HALT);
+	//who open who byebye
+	//HCI_EXT_ClkDivOnHaltCmd(HCI_EXT_ENABLE_CLK_DIVIDE_ON_HALT); no no no...
 
 	// Register for all key events - This app will handle all key events
 	RegisterForKeys(simpleBLEPeripheral_TaskID);
@@ -502,17 +506,14 @@ uint16 SimpleBLEPeripheral_ProcessEvent(uint8 task_id, uint16 events) {
 		return (events ^ SBP_SEND_IRDATA_EVT);
 	}
 
-#if defined ( PLUS_BROADCASTER )
-	if ( events & SBP_ADV_IN_CONNECTION_EVT )
-	{
+	if (events & SBP_ADV_IN_CONNECTION_EVT) {
 		uint8 turnOnAdv = TRUE;
 		// Turn on advertising while in a connection
-		GAPRole_SetParameter( GAPROLE_ADVERT_ENABLED, sizeof( uint8 ), &turnOnAdv );
+		GAPRole_SetParameter(GAPROLE_ADVERT_ENABLED, sizeof(uint8), &turnOnAdv);
 
 		return (events ^ SBP_ADV_IN_CONNECTION_EVT);
 	}
-#endif // PLUS_BROADCASTER
-	// Discard unknown events
+
 	return 0;
 }
 
@@ -564,10 +565,10 @@ static void simpleBLEPeripheral_HandleKeys(uint8 shift, uint8 keys) {
 static void sendIRData() {
 	if (u_state != IR_DATA_SEND_BEGIN_STATE) {
 		u_state = IR_DATA_SEND_BEGIN_STATE;
-		uint8 kkkkk[255];
-		osal_memset(kkkkk, 0, 255);
-		kkkkk[0] = 0xE3;
-		osal_memcpy(kkkkk + 1, UartBuffer, 120);
+//		uint8 kkkkk[255];
+//		osal_memset(kkkkk, 0, 255);
+//		kkkkk[0] = 0xE3;
+//		osal_memcpy(kkkkk + 1, UartBuffer, 120);
 		SbpHalUARTWrite(kkkkk, 121);
 	}
 }
@@ -700,35 +701,47 @@ static void performPeriodicTask(void) {
  */
 
 static void simpleProfileChangeCB(uint8 paramID) {
-	UART_HAL_DELAY(1000);
+	//UART_HAL_DELAY(1000);
 	osal_memset(newValueBuf, 0, 20);
 	switch (paramID) {
 	case SIMPLEPROFILE_CHAR1:
 		SimpleProfile_GetParameter(SIMPLEPROFILE_CHAR1, newValueBuf);
 
-		if ((newValueBuf[0] == TRANSFER_DATA_SIGN) && (newValueBuf[1] != 0) && (!TRANSFER_DATA_STATE_IN)) {
-			data_len = newValueBuf[1];
-			TRANSFER_DATA_STATE_IN = TRUE;
-			data_len_index = 0;
-			osal_memset(recv_value, 0, data_len);
+		HalLcdWriteStringValue("newValueBuf[0]:", newValueBuf[0], 16, HAL_LCD_LINE_7);
+
+		//UART_HAL_DELAY(10000);
+		if (newValueBuf[0] == 0xFE) {
+			if (u_state != IR_DATA_SEND_BEGIN_STATE) {
+				u_state = IR_DATA_SEND_BEGIN_STATE;
+				SbpHalUARTWrite(kkkkk, 121);
+			}
 		}
 
-		cur_data_len = osal_strlen(newValueBuf);
-
-		if (TRANSFER_DATA_STATE_IN) {
-			osal_memcpy((recv_value + data_len_index), newValueBuf, cur_data_len);
-			data_len_index += cur_data_len;
-		}
-
-		HalLcdWriteStringValue("data_len_index:", data_len_index, 10, HAL_LCD_LINE_7);
-
-		if (data_len_index == data_len) {
-			TRANSFER_DATA_STATE_IN = FALSE;
-			HalLcdWriteStringValue("data_len:", osal_strlen(recv_value), 10, HAL_LCD_LINE_6);
-
-			data_len_index = 0;
-			osal_memset(recv_value, 0, data_len);
-		}
+//		if ((newValueBuf[0] == TRANSFER_DATA_SIGN) && (newValueBuf[1] != 0) && (!TRANSFER_DATA_STATE_IN)) {
+//			data_len = newValueBuf[1];
+//			TRANSFER_DATA_STATE_IN = TRUE;
+//			data_len_index = 0;
+//			osal_memset(recv_value, 0, data_len);
+//		}
+//
+//		cur_data_len = osal_strlen(newValueBuf);
+//
+//		if (TRANSFER_DATA_STATE_IN) {
+//			osal_memcpy((recv_value + data_len_index), newValueBuf, cur_data_len);
+//			data_len_index += cur_data_len;
+//		}
+//
+//		HalLcdWriteStringValue("data_len_index:", data_len_index, 10, HAL_LCD_LINE_7);
+//
+//		if (data_len_index == data_len) {
+//			TRANSFER_DATA_STATE_IN = FALSE;
+//			HalLcdWriteStringValue("data_len:", osal_strlen(recv_value), 10, HAL_LCD_LINE_6);
+//
+//			data_len = 0;
+//			cur_data_len = 0;
+//			data_len_index = 0;
+//			osal_memset(recv_value, 0, data_len);
+//		}
 
 		break;
 	case SIMPLEPROFILE_CHAR3:

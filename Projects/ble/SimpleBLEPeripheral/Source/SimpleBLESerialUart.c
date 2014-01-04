@@ -67,12 +67,12 @@ uint8 UART_PORT_HAVE_READ = 0;
 
 void SbpHalUARTReadCallback(uint8 port, uint8 event) {
 	UART_PORT_HAVE_READ = 0;
-	UART_HAL_DELAY(35000);
+	//UART_HAL_DELAY(15000);
 	numBytes = Hal_UART_RxBufLen(port);
 	HalLcdWriteStringValue("numBytes", numBytes, 10, HAL_LCD_LINE_2);
 	if (numBytes > 0 && (u_state == IR_DATA_STUDY_CMD_START_BEGIN_STATE)) {
 		SbpHalUARTRead(port, pktBuffer, numBytes);
-		HalLcdWriteStringValue("pktBuffer", pktBuffer[0], 16, HAL_LCD_LINE_3);
+		//HalLcdWriteStringValue("pktBuffer", pktBuffer[0], 16, HAL_LCD_LINE_3);
 		if (pktBuffer[0] == SBP_UART_STUDY_CMD) {
 			osal_memset(UartBuffer, 0, SBP_UART_RX_BUF_SIZE);
 			point = 0;
@@ -103,12 +103,12 @@ void SbpHalUARTReadCallback(uint8 port, uint8 event) {
 }
 
 void SbpHalUARTRead(uint8 port, uint8 *buf, uint16 len) {
-	UART_HAL_DELAY(1000);
+	//UART_HAL_DELAY(1000);
 	HalUARTRead(port, pktBuffer, numBytes);
 	UART_PORT_HAVE_READ = 1;
 }
 
 void SbpHalUARTWrite(uint8 *pBuffer, uint16 length) {
-	UART_HAL_DELAY(1000);
+	//UART_HAL_DELAY(1000);
 	HalUARTWrite(SBP_UART_PORT, pBuffer, length);
 }

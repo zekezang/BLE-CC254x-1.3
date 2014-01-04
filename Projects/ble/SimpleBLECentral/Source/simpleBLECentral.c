@@ -129,6 +129,9 @@
 // TRUE to filter discovery results on desired service UUID
 #define DEFAULT_DEV_DISC_BY_SVC_UUID          TRUE
 
+
+#define UART_HAL_DELAY(n) st( { volatile uint32 i; for (i=0; i<(n); i++) { }; } )
+
 // Application states
 enum {
 	BLE_STATE_IDLE, BLE_STATE_CONNECTING, BLE_STATE_CONNECTED, BLE_STATE_DISCONNECTING
@@ -396,48 +399,78 @@ uint8 sbpGattWriteString(uint8 *pBuffer, uint16 length) {
 	return status;
 }
 
-static unsigned char val[10] = { 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6A};
+static unsigned char val[10] = {0x11};
 static uint8 *send_val;
 static uint8 kk = 0;
 static void simpleBLECentral_sendABC() {
 	uint8 status;
+
+//	sbpGattWriteString(val, 1);
+
+		//1
+		uint8 val1[10] = {0xFE, 0x7A, 0x78, 0x23, 0x74, 0x8C, 0xEF, 0x47, 0x62, 0x9B};
+		sbpGattWriteString(val1, 10);
+
+//		//2
+//		UART_HAL_DELAY(2000);
+//		uint8 val2[10] = {0x5C, 0x13, 0x5E, 0x78, 0xFC, 0x7A, 0x4F, 0x07, 0x44, 0x00};
+//		sbpGattWriteString(val2, 10);
 //
-//	if (val[0] > 0x75) {
-//		val[0] = 0x61;
-//		val[1] = 0x62;
-//		val[2] = 0x63;
-//		val[3] = 0x64;
-//		val[4] = 0x65;
-//	} else {
-//		val[0] += 1;
-//		val[1] += 1;
-//		val[2] += 1;
-//		val[3] += 1;
-//		val[4] += 1;
-//	}
+//		//3
+//		UART_HAL_DELAY(2000);
+//		uint8 val3[10] = {0x5E, 0x37, 0x11, 0x67, 0x4E, 0x04, 0xF5, 0x23, 0x12, 0x89};
+//		sbpGattWriteString(val3, 10);
+//
+//		//4
+//		UART_HAL_DELAY(2000);
+//		uint8 val4[10] = {0xAE, 0x7C, 0x06, 0x0B, 0xFD, 0x2B, 0x1A, 0x91, 0xB6, 0x84};
+//		sbpGattWriteString(val4, 10);
+//
+//		//5
+//		UART_HAL_DELAY(2000);
+//		uint8 val5[10] = {0x0E, 0x13, 0x05, 0x33, 0x22, 0x99, 0xBE, 0x8C, 0x16, 0x1B};
+//		sbpGattWriteString(val5, 10);
+//
+//		//6
+//		UART_HAL_DELAY(2000);
+//		uint8 val6[10] = {0x0D, 0x3B, 0x2A, 0xA1, 0xC6, 0x94, 0x1E, 0x23, 0x15, 0x43};
+//		sbpGattWriteString(val6, 10);
+//
+//		//7
+//		UART_HAL_DELAY(2000);
+//		uint8 val7[10] = {0x32, 0xA9, 0xCE, 0x9C, 0x26, 0x2B, 0x1D, 0x4B, 0x3A, 0xB1};
+//		sbpGattWriteString(val7, 10);
+//
+//		//8
+//		UART_HAL_DELAY(2000);
+//		uint8 val8[10] = {0xD6, 0x79, 0x12, 0x16, 0x07, 0x35, 0x33, 0xA9, 0xCD, 0x99};
+//		sbpGattWriteString(val8, 10);
+//
+//		//9
+//		UART_HAL_DELAY(2000);
+//		uint8 val9[10] = {0x12, 0x16, 0x07, 0x35, 0x33, 0xA9, 0xCD, 0x99, 0x12, 0x16};
+//		sbpGattWriteString(val9, 10);
+//
+//		//10
+//		UART_HAL_DELAY(2000);
+//		uint8 val10[10] = {0x07, 0x35, 0x33, 0xA9, 0xCD, 0x99, 0x22, 0x27, 0x18, 0x35};
+//		sbpGattWriteString(val10, 10);
+//
+//		//11
+//		UART_HAL_DELAY(2000);
+//		uint8 val11[10] = {0x23, 0x98, 0xBC, 0x99, 0x13, 0x26, 0x07, 0x45, 0x32, 0x99};
+//		sbpGattWriteString(val11, 10);
+//
+//		//12
+//		UART_HAL_DELAY(2000);
+//		uint8 val12[10] = {0xCD, 0x8A, 0x13, 0x17, 0x08, 0x44, 0x32, 0xA8, 0xCC, 0x8B};
+//		sbpGattWriteString(val12, 10);
+//
+//		//13
+//		UART_HAL_DELAY(2000);
+//		uint8 val13[10] = {0x50, 0x80};
+//		sbpGattWriteString(val13, 2);
 
-//	send_val = osal_msg_allocate(20);
-//	osal_memset(send_val, 0, 20);
-//	osal_memcpy(send_val, "send value: ", 12);
-//	osal_memcpy(send_val + 12, val, 5);
-//	//HalLcdWriteString((char*) send_val, HAL_LCD_LINE_3);
-//	osal_msg_deallocate(send_val);
-
-	if(kk ==0){
-		char vall[10] = { 0xFE, 0xA0, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6A};
-		status = sbpGattWriteString(vall, 10);
-	}else{
-		status = sbpGattWriteString(val, 10);
-	}
-
-	if (status == SUCCESS) {
-		simpleBLEProcedureInProgress = TRUE;
-		simpleBLEDoWrite = !simpleBLEDoWrite;
-	}
-	kk++;
-	if(kk<16){
-		osal_start_timerEx(simpleBLETaskId, SBP_ZEKEZANG_EVT, 300);
-	}
 
 }
 
@@ -505,10 +538,11 @@ static void simpleBLECentral_HandleKeys(uint8 shift, uint8 keys) {
 
 	if (keys & HAL_KEY_RIGHT) {
 		// Connection update
-		if (simpleBLEState == BLE_STATE_CONNECTED) {
-			GAPCentralRole_UpdateLink(simpleBLEConnHandle, DEFAULT_UPDATE_MIN_CONN_INTERVAL, DEFAULT_UPDATE_MAX_CONN_INTERVAL,
-					DEFAULT_UPDATE_SLAVE_LATENCY, DEFAULT_UPDATE_CONN_TIMEOUT);
-		}
+//		if (simpleBLEState == BLE_STATE_CONNECTED) {
+//			GAPCentralRole_UpdateLink(simpleBLEConnHandle, DEFAULT_UPDATE_MIN_CONN_INTERVAL, DEFAULT_UPDATE_MAX_CONN_INTERVAL,
+//					DEFAULT_UPDATE_SLAVE_LATENCY, DEFAULT_UPDATE_CONN_TIMEOUT);
+//		}
+		simpleBLECentral_sendABC();
 	}
 
 	if (keys & HAL_KEY_CENTER) {
