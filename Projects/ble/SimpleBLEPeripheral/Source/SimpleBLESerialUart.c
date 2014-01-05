@@ -108,7 +108,44 @@ void SbpHalUARTRead(uint8 port, uint8 *buf, uint16 len) {
 	UART_PORT_HAVE_READ = 1;
 }
 
+//static uint8 data_len = 0, exsit_data_len = 0, send_times = 0, send_len = 0;
+//#define one_time_data_len 125
 void SbpHalUARTWrite(uint8 *pBuffer, uint16 length) {
-	//UART_HAL_DELAY(1000);
+
+//	data_len = osal_strlen(pBuffer);
+//
+//	do {
+//
+//		if(Hal_UART_TxBufLen() > 0){
+//			continue;
+//		}
+//
+//		if (data_len <= one_time_data_len) {
+//			HalUARTWrite(SBP_UART_PORT, pBuffer, length);
+//			exsit_data_len = 0;
+//
+//		} else if (exsit_data_len == 0 || exsit_data_len >= one_time_data_len) {
+//			exsit_data_len = data_len - one_time_data_len;
+//			HalUARTWrite(SBP_UART_PORT, (pBuffer + (send_times * one_time_data_len)), one_time_data_len);
+//
+//		} else if (exsit_data_len > 0 && exsit_data_len < one_time_data_len) {
+//			HalUARTWrite(SBP_UART_PORT, (pBuffer + (send_times * one_time_data_len)), exsit_data_len);
+//			exsit_data_len = 0;
+//		} else {
+//		}
+//
+//		send_times++;
+//
+//	} while (exsit_data_len > 0);
+//
+//	data_len = 0;
+//	send_len = 0;
+//	exsit_data_len = 0;
+//	send_times = 0;
+
+	do{
+		UART_HAL_DELAY(10);
+	}while(Hal_UART_TxBufLen() > 0);
+
 	HalUARTWrite(SBP_UART_PORT, pBuffer, length);
 }

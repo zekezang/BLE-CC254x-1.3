@@ -1220,7 +1220,7 @@
         </option>
         <option>
           <name>RTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\CLIB\cl-pli-blxd-1e16x01.r51</state>
+          <state>$TOOLKIT_DIR$\LIB\CLIB\cl-pli-blpd-1e16x01.r51</state>
         </option>
         <option>
           <name>Input variant</name>
@@ -1344,7 +1344,6 @@
           <state>HAL_LCD=TRUE</state>
           <state>HAL_LED=TRUE</state>
           <state>HAL_UART=TRUE</state>
-          <state>HAL_UART_DMA=TRUE</state>
         </option>
         <option>
           <name>CCPreprocFile</name>

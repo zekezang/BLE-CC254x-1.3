@@ -113,7 +113,7 @@
 #define DEFAULT_DESIRED_MAX_CONN_INTERVAL     800
 
 // Slave latency to use if automatic parameter update request is enabled
-#define DEFAULT_DESIRED_SLAVE_LATENCY         0
+#define DEFAULT_DESIRED_SLAVE_LATENCY         10
 
 // Supervision timeout value (units of 10ms, 1000=10s) if automatic parameter update request is enabled
 #define DEFAULT_DESIRED_CONN_TIMEOUT          1000
@@ -699,7 +699,8 @@ static void performPeriodicTask(void) {
  *
  * @return  none
  */
-
+static uint8 send_times = 0;
+#define one_time_data_len 125
 static void simpleProfileChangeCB(uint8 paramID) {
 	//UART_HAL_DELAY(1000);
 	osal_memset(newValueBuf, 0, 20);
@@ -707,41 +708,67 @@ static void simpleProfileChangeCB(uint8 paramID) {
 	case SIMPLEPROFILE_CHAR1:
 		SimpleProfile_GetParameter(SIMPLEPROFILE_CHAR1, newValueBuf);
 
-		HalLcdWriteStringValue("newValueBuf[0]:", newValueBuf[0], 16, HAL_LCD_LINE_7);
+		//HalLcdWriteStringValue("newValueBuf[0]:", newValueBuf[0], 16, HAL_LCD_LINE_7);
 
 		//UART_HAL_DELAY(10000);
-		if (newValueBuf[0] == 0xFE) {
-			if (u_state != IR_DATA_SEND_BEGIN_STATE) {
-				u_state = IR_DATA_SEND_BEGIN_STATE;
-				SbpHalUARTWrite(kkkkk, 121);
+//		if (newValueBuf[0] == 0xFE) {
+//			if (u_state != IR_DATA_SEND_BEGIN_STATE) {
+//				u_state = IR_DATA_SEND_BEGIN_STATE;
+//				SbpHalUARTWrite(kkkkk, 121);
+//			}
+//		}
+
+		if ((newValueBuf[0] == TRANSFER_DATA_SIGN) && (newValueBuf[1] != 0) && (!TRANSFER_DATA_STATE_IN)) {
+			data_len = newValueBuf[1];
+			TRANSFER_DATA_STATE_IN = TRUE;
+			data_len_index = 0;
+			osal_memset(recv_value, 0, data_len);
+		}
+
+		cur_data_len = osal_strlen(newValueBuf);
+
+		if (TRANSFER_DATA_STATE_IN) {
+			osal_memcpy((recv_value + data_len_index), newValueBuf, cur_data_len);
+			data_len_index += cur_data_len;
+
+			if ((data_len_index - send_times * one_time_data_len - 1) >= one_time_data_len) {
+				if (send_times == 0) {
+					recv_value[1] = 0xE3;
+					//if (u_state != IR_DATA_SEND_BEGIN_STATE) {
+					//u_state = IR_DATA_SEND_BEGIN_STATE;
+					SbpHalUARTWrite(recv_value + 1, one_time_data_len);
+					//}
+				} else {
+					SbpHalUARTWrite(recv_value + 1 + send_times * one_time_data_len, one_time_data_len);
+				}
+				send_times++;
+			} else if ( (send_times > 0) &&((data_len_index - send_times * one_time_data_len) < one_time_data_len) && (data_len_index == data_len)) {
+
+				SbpHalUARTWrite(recv_value + 1 + send_times * one_time_data_len, data_len - send_times * one_time_data_len -1);
+				send_times++;
+
+			} else if ((send_times == 0) && (data_len < one_time_data_len) && (data_len_index == data_len)) {
+				recv_value[1] = 0xE3;
+				//if (u_state != IR_DATA_SEND_BEGIN_STATE) {
+				//u_state = IR_DATA_SEND_BEGIN_STATE;
+				SbpHalUARTWrite(recv_value + 1, data_len - 1);
+				//}
+			} else {
+
 			}
 		}
 
-//		if ((newValueBuf[0] == TRANSFER_DATA_SIGN) && (newValueBuf[1] != 0) && (!TRANSFER_DATA_STATE_IN)) {
-//			data_len = newValueBuf[1];
-//			TRANSFER_DATA_STATE_IN = TRUE;
-//			data_len_index = 0;
-//			osal_memset(recv_value, 0, data_len);
-//		}
-//
-//		cur_data_len = osal_strlen(newValueBuf);
-//
-//		if (TRANSFER_DATA_STATE_IN) {
-//			osal_memcpy((recv_value + data_len_index), newValueBuf, cur_data_len);
-//			data_len_index += cur_data_len;
-//		}
-//
-//		HalLcdWriteStringValue("data_len_index:", data_len_index, 10, HAL_LCD_LINE_7);
-//
-//		if (data_len_index == data_len) {
-//			TRANSFER_DATA_STATE_IN = FALSE;
-//			HalLcdWriteStringValue("data_len:", osal_strlen(recv_value), 10, HAL_LCD_LINE_6);
-//
-//			data_len = 0;
-//			cur_data_len = 0;
-//			data_len_index = 0;
-//			osal_memset(recv_value, 0, data_len);
-//		}
+		HalLcdWriteStringValue("data_len_index:", data_len_index, 10, HAL_LCD_LINE_7);
+
+		if (data_len_index == data_len) {
+			TRANSFER_DATA_STATE_IN = FALSE;
+			HalLcdWriteStringValue("data_len:", osal_strlen(recv_value), 10, HAL_LCD_LINE_6);
+			send_times = 0;
+			data_len = 0;
+			cur_data_len = 0;
+			data_len_index = 0;
+			osal_memset(recv_value, 0, data_len);
+		}
 
 		break;
 	case SIMPLEPROFILE_CHAR3:

@@ -1,41 +1,41 @@
 /**************************************************************************************************
-  Filename:     hal_uart.c
-  Revised:      $Date: 2012-08-01 14:42:41 -0700 (Wed, 01 Aug 2012) $
-  Revision:     $Revision: 31065 $
+ Filename:     hal_uart.c
+ Revised:      $Date: 2012-08-01 14:42:41 -0700 (Wed, 01 Aug 2012) $
+ Revision:     $Revision: 31065 $
 
-  Description:  This file contains the interface to the H/W UART driver.
+ Description:  This file contains the interface to the H/W UART driver.
 
 
-  Copyright 2006-2012 Texas Instruments Incorporated. All rights reserved.
+ Copyright 2006-2012 Texas Instruments Incorporated. All rights reserved.
 
-  IMPORTANT: Your use of this Software is limited to those specific rights
-  granted under the terms of a software license agreement between the user
-  who downloaded the software, his/her employer (which must be your employer)
-  and Texas Instruments Incorporated (the "License").  You may not use this
-  Software unless you agree to abide by the terms of the License. The License
-  limits your use, and you acknowledge, that the Software may not be modified,
-  copied or distributed unless embedded on a Texas Instruments microcontroller
-  or used solely and exclusively in conjunction with a Texas Instruments radio
-  frequency transceiver, which is integrated into your product.  Other than for
-  the foregoing purpose, you may not use, reproduce, copy, prepare derivative
-  works of, modify, distribute, perform, display or sell this Software and/or
-  its documentation for any purpose.
+ IMPORTANT: Your use of this Software is limited to those specific rights
+ granted under the terms of a software license agreement between the user
+ who downloaded the software, his/her employer (which must be your employer)
+ and Texas Instruments Incorporated (the "License").  You may not use this
+ Software unless you agree to abide by the terms of the License. The License
+ limits your use, and you acknowledge, that the Software may not be modified,
+ copied or distributed unless embedded on a Texas Instruments microcontroller
+ or used solely and exclusively in conjunction with a Texas Instruments radio
+ frequency transceiver, which is integrated into your product.  Other than for
+ the foregoing purpose, you may not use, reproduce, copy, prepare derivative
+ works of, modify, distribute, perform, display or sell this Software and/or
+ its documentation for any purpose.
 
-  YOU FURTHER ACKNOWLEDGE AND AGREE THAT THE SOFTWARE AND DOCUMENTATION ARE
-  PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED,
-  INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF MERCHANTABILITY, TITLE,
-  NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL
-  TEXAS INSTRUMENTS OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER CONTRACT,
-  NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR OTHER
-  LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
-  INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE
-  OR CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT
-  OF SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
-  (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
+ YOU FURTHER ACKNOWLEDGE AND AGREE THAT THE SOFTWARE AND DOCUMENTATION ARE
+ PROVIDED ï¿½AS ISï¿½ WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED,
+ INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF MERCHANTABILITY, TITLE,
+ NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL
+ TEXAS INSTRUMENTS OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER CONTRACT,
+ NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR OTHER
+ LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
+ INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE
+ OR CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT
+ OF SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
+ (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 
-  Should you have any questions regarding your right to use this Software,
-  contact Texas Instruments Incorporated at www.TI.com.
-**************************************************************************************************/
+ Should you have any questions regarding your right to use this Software,
+ contact Texas Instruments Incorporated at www.TI.com.
+ **************************************************************************************************/
 
 /*********************************************************************
  * INCLUDES
@@ -83,29 +83,28 @@ void HalUARTIsrDMA(void);
  *
  * @return  none
  *****************************************************************************/
-void HalUARTInit(void)
-{
+void HalUARTInit(void) {
 #if (HAL_UART_DMA && HAL_UART_SPI)  // When both are defined, port is run-time choice.
-  if (HAL_UART_PORT)
-  {
-    HalUARTInitSPI();
-  }
-  else
-  {
-    HalUARTInitDMA();
-  }
+	if (HAL_UART_PORT)
+	{
+		HalUARTInitSPI();
+	}
+	else
+	{
+		HalUARTInitDMA();
+	}
 #else
 #if HAL_UART_DMA
-  HalUARTInitDMA();
+	HalUARTInitDMA();
 #endif
 #if HAL_UART_ISR
-  HalUARTInitISR();
+	HalUARTInitISR();
 #endif
 #if HAL_UART_SPI
-  HalUARTInitSPI();
+	HalUARTInitSPI();
 #endif
 #if HAL_UART_USB
-  HalUARTInitUSB();
+	HalUARTInitUSB();
 #endif
 #endif
 }
@@ -120,36 +119,35 @@ void HalUARTInit(void)
  *
  * @return  Status of the function call
  *****************************************************************************/
-uint8 HalUARTOpen(uint8 port, halUARTCfg_t *config)
-{
+uint8 HalUARTOpen(uint8 port, halUARTCfg_t *config) {
 #if (HAL_UART_DMA == 1)
-  if (port == HAL_UART_PORT_0)  HalUARTOpenDMA(config);
+	if (port == HAL_UART_PORT_0) HalUARTOpenDMA(config);
 #endif
 #if (HAL_UART_DMA == 2)
-  if (port == HAL_UART_PORT_1)  HalUARTOpenDMA(config);
+	if (port == HAL_UART_PORT_1) HalUARTOpenDMA(config);
 #endif
 #if (HAL_UART_ISR == 1)
-  if (port == HAL_UART_PORT_0)  HalUARTOpenISR(config);
+	if (port == HAL_UART_PORT_0) HalUARTOpenISR(config);
 #endif
 #if (HAL_UART_ISR == 2)
-  if (port == HAL_UART_PORT_1)  HalUARTOpenISR(config);
+	if (port == HAL_UART_PORT_1) HalUARTOpenISR(config);
 #endif
 #if (HAL_UART_SPI == 1)
-  if (port == HAL_UART_PORT_0)  HalUARTOpenSPI(config);
+	if (port == HAL_UART_PORT_0) HalUARTOpenSPI(config);
 #endif
 #if (HAL_UART_SPI == 2)
-  if (port == HAL_UART_PORT_1)  HalUARTOpenSPI(config);
+	if (port == HAL_UART_PORT_1) HalUARTOpenSPI(config);
 #endif
 #if (HAL_UART_USB)
-  HalUARTOpenUSB(config);
+	HalUARTOpenUSB(config);
 #endif
 #if (HAL_UART_DMA == 0) && (HAL_UART_ISR == 0) && (HAL_UART_SPI == 0)
-  // UART is not enabled. Do nothing.
-  (void) port;   // unused argument
-  (void) config; // unused argument
+	// UART is not enabled. Do nothing.
+	(void) port; // unused argument
+	(void) config; // unused argument
 #endif
 
-  return HAL_UART_SUCCESS;
+	return HAL_UART_SUCCESS;
 }
 
 /*****************************************************************************
@@ -163,37 +161,36 @@ uint8 HalUARTOpen(uint8 port, halUARTCfg_t *config)
  *
  * @return  length of buffer that was read
  *****************************************************************************/
-uint16 HalUARTRead(uint8 port, uint8 *buf, uint16 len)
-{
+uint16 HalUARTRead(uint8 port, uint8 *buf, uint16 len) {
 #if (HAL_UART_DMA == 1)
-  if (port == HAL_UART_PORT_0)  return HalUARTReadDMA(buf, len);
+	if (port == HAL_UART_PORT_0) return HalUARTReadDMA(buf, len);
 #endif
 #if (HAL_UART_DMA == 2)
-  if (port == HAL_UART_PORT_1)  return HalUARTReadDMA(buf, len);
+	if (port == HAL_UART_PORT_1) return HalUARTReadDMA(buf, len);
 #endif
 #if (HAL_UART_ISR == 1)
-  if (port == HAL_UART_PORT_0)  return HalUARTReadISR(buf, len);
+	if (port == HAL_UART_PORT_0) return HalUARTReadISR(buf, len);
 #endif
 #if (HAL_UART_ISR == 2)
-  if (port == HAL_UART_PORT_1)  return HalUARTReadISR(buf, len);
+	if (port == HAL_UART_PORT_1) return HalUARTReadISR(buf, len);
 #endif
 #if (HAL_UART_SPI == 1)
-  if (port == HAL_UART_PORT_0)  return HalUARTReadSPI(buf, len);
+	if (port == HAL_UART_PORT_0) return HalUARTReadSPI(buf, len);
 #endif
 #if (HAL_UART_SPI == 2)
-  if (port == HAL_UART_PORT_1)  return HalUARTReadSPI(buf, len);
+	if (port == HAL_UART_PORT_1) return HalUARTReadSPI(buf, len);
 #endif
 
 #if HAL_UART_USB
-  return HalUARTRx(buf, len);
+	return HalUARTRx(buf, len);
 #else
-  #if (HAL_UART_DMA == 0) && (HAL_UART_ISR == 0) && (HAL_UART_SPI == 0)
-    // UART is not enabled. Do nothing.
-    (void) port;   // unused argument
-    (void) buf;   // unused argument
-    (void) len;   // unused argument
-  #endif
-  return 0;
+#if (HAL_UART_DMA == 0) && (HAL_UART_ISR == 0) && (HAL_UART_SPI == 0)
+	// UART is not enabled. Do nothing.
+	(void) port; // unused argument
+	(void) buf; // unused argument
+	(void) len; // unused argument
+#endif
+	return 0;
 #endif
 }
 
@@ -208,38 +205,37 @@ uint16 HalUARTRead(uint8 port, uint8 *buf, uint16 len)
  *
  * @return  length of the buffer that was sent
  *****************************************************************************/
-uint16 HalUARTWrite(uint8 port, uint8 *buf, uint16 len)
-{
+uint16 HalUARTWrite(uint8 port, uint8 *buf, uint16 len) {
 #if (HAL_UART_DMA == 1)
-  if (port == HAL_UART_PORT_0)  return HalUARTWriteDMA(buf, len);
+	if (port == HAL_UART_PORT_0) return HalUARTWriteDMA(buf, len);
 #endif
 #if (HAL_UART_DMA == 2)
-  if (port == HAL_UART_PORT_1)  return HalUARTWriteDMA(buf, len);
+	if (port == HAL_UART_PORT_1) return HalUARTWriteDMA(buf, len);
 #endif
 #if (HAL_UART_ISR == 1)
-  if (port == HAL_UART_PORT_0)  return HalUARTWriteISR(buf, len);
+	if (port == HAL_UART_PORT_0) return HalUARTWriteISR(buf, len);
 #endif
 #if (HAL_UART_ISR == 2)
-  if (port == HAL_UART_PORT_1)  return HalUARTWriteISR(buf, len);
+	if (port == HAL_UART_PORT_1) return HalUARTWriteISR(buf, len);
 #endif
 #if (HAL_UART_SPI == 1)
-  if (port == HAL_UART_PORT_0)  return HalUARTWriteSPI(buf, len);
+	if (port == HAL_UART_PORT_0) return HalUARTWriteSPI(buf, len);
 #endif
 #if (HAL_UART_SPI == 2)
-  if (port == HAL_UART_PORT_1)  return HalUARTWriteSPI(buf, len);
+	if (port == HAL_UART_PORT_1) return HalUARTWriteSPI(buf, len);
 #endif
 
 #if HAL_UART_USB
-  HalUARTTx(buf, len);
-  return len;
+	HalUARTTx(buf, len);
+	return len;
 #else
-  #if (HAL_UART_DMA == 0) && (HAL_UART_ISR == 0) && (HAL_UART_SPI == 0)
-    // UART is not enabled. Do nothing.
-    (void) port;   // unused argument
-    (void) buf;   // unused argument
-    (void) len;   // unused argument
-  #endif
-  return 0;
+#if (HAL_UART_DMA == 0) && (HAL_UART_ISR == 0) && (HAL_UART_SPI == 0)
+	// UART is not enabled. Do nothing.
+	(void) port; // unused argument
+	(void) buf; // unused argument
+	(void) len; // unused argument
+#endif
+	return 0;
 #endif
 }
 
@@ -252,10 +248,9 @@ uint16 HalUARTWrite(uint8 port, uint8 *buf, uint16 len)
  *
  * @return  None
  *****************************************************************************/
-void HalUARTSuspend( void )
-{
+void HalUARTSuspend(void) {
 #if HAL_UART_ISR
-  HalUARTSuspendISR();
+	HalUARTSuspendISR();
 #endif
 }
 
@@ -268,10 +263,9 @@ void HalUARTSuspend( void )
  *
  * @return  None
  *****************************************************************************/
-void HalUARTResume( void )
-{
+void HalUARTResume(void) {
 #if HAL_UART_ISR
-  HalUARTResumeISR();
+	HalUARTResumeISR();
 #endif
 }
 
@@ -284,29 +278,28 @@ void HalUARTResume( void )
  *
  * @return  none
  *****************************************************************************/
-void HalUARTPoll(void)
-{
+void HalUARTPoll(void) {
 #if (HAL_UART_DMA && HAL_UART_SPI)  // When both are defined, port is run-time choice.
-  if (HAL_UART_PORT)
-  {
-    HalUARTPollSPI();
-  }
-  else
-  {
-    HalUARTPollDMA();
-  }
+	if (HAL_UART_PORT)
+	{
+		HalUARTPollSPI();
+	}
+	else
+	{
+		HalUARTPollDMA();
+	}
 #else
 #if HAL_UART_DMA
-  HalUARTPollDMA();
+	HalUARTPollDMA();
 #endif
 #if HAL_UART_ISR
-  HalUARTPollISR();
+	HalUARTPollISR();
 #endif
 #if HAL_UART_SPI
-  HalUARTPollSPI();
+	HalUARTPollSPI();
 #endif
 #if HAL_UART_USB
-  HalUARTPollUSB();
+	HalUARTPollUSB();
 #endif
 #endif
 }
@@ -320,55 +313,66 @@ void HalUARTPoll(void)
  *
  * @return  length of current Rx Buffer
  **************************************************************************************************/
-uint16 Hal_UART_RxBufLen( uint8 port )
-{
+uint16 Hal_UART_RxBufLen(uint8 port) {
 #if (HAL_UART_DMA == 1)
-  if (port == HAL_UART_PORT_0)  return HalUARTRxAvailDMA();
+	if (port == HAL_UART_PORT_0) return HalUARTRxAvailDMA();
 #endif
 #if (HAL_UART_DMA == 2)
-  if (port == HAL_UART_PORT_1)  return HalUARTRxAvailDMA();
+	if (port == HAL_UART_PORT_1) return HalUARTRxAvailDMA();
 #endif
 #if (HAL_UART_ISR == 1)
-  if (port == HAL_UART_PORT_0)  return HalUARTRxAvailISR();
+	if (port == HAL_UART_PORT_0) return HalUARTRxAvailISR();
 #endif
 #if (HAL_UART_ISR == 2)
-  if (port == HAL_UART_PORT_1)  return HalUARTRxAvailISR();
+	if (port == HAL_UART_PORT_1) return HalUARTRxAvailISR();
 #endif
 #if (HAL_UART_SPI == 1)
-  if (port == HAL_UART_PORT_0)  return HalUARTRxAvailSPI();
+	if (port == HAL_UART_PORT_0) return HalUARTRxAvailSPI();
 #endif
 #if (HAL_UART_SPI == 2)
-  if (port == HAL_UART_PORT_1)  return HalUARTRxAvailSPI();
+	if (port == HAL_UART_PORT_1) return HalUARTRxAvailSPI();
 #endif
 
 #if HAL_UART_USB
-  return HalUARTRxAvailUSB();
+	return HalUARTRxAvailUSB();
 #else
-  #if (HAL_UART_DMA == 0) && (HAL_UART_ISR == 0) && (HAL_UART_SPI == 0)
-    // UART is not enabled. Do nothing.
-    (void) port;   // unused argument
-  #endif
-  return 0;
+#if (HAL_UART_DMA == 0) && (HAL_UART_ISR == 0) && (HAL_UART_SPI == 0)
+	// UART is not enabled. Do nothing.
+	(void) port; // unused argument
+#endif
+	return 0;
 #endif
 }
 
-void HalUARTIsrDMA(void)
-{
+/*************************************************************************************************
+ * @fn      Hal_UART_TxBufLen()
+ *
+ * @brief   Calculate Tx Buffer length of a port
+ *
+ * @param   port - UART port (not used.)
+ *
+ * @return  length of current Tx buffer
+ *************************************************************************************************/
+uint16 Hal_UART_TxBufLen() {
+	return HalUARTBusyDMA();
+}
+
+void HalUARTIsrDMA(void) {
 #if (HAL_UART_DMA && HAL_UART_SPI)  // When both are defined, port is run-time choice.
-  if (HAL_UART_PORT)
-  {
-    HalUART_DMAIsrSPI();
-  }
-  else
-  {
-    HalUART_DMAIsrDMA();
-  }
+	if (HAL_UART_PORT)
+	{
+		HalUART_DMAIsrSPI();
+	}
+	else
+	{
+		HalUART_DMAIsrDMA();
+	}
 #elif HAL_UART_DMA
-  HalUART_DMAIsrDMA();
+	HalUART_DMAIsrDMA();
 #elif HAL_UART_SPI
-  HalUART_DMAIsrSPI();
+	HalUART_DMAIsrSPI();
 #endif
 }
 
 /******************************************************************************
-******************************************************************************/
+ ******************************************************************************/
